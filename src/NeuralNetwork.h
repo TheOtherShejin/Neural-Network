@@ -23,7 +23,9 @@ public:
 };
 
 class NeuralNetwork {
+public:
 	std::vector<Layer> layers;
 	
 	NeuralNetwork(std::vector<int> numberOfNeurons, double (*hiddenLayerAF)(double), double (*outputLayerAF)(double));
+	std::vector<double> CalculateOutput(std::vector<double> input);
 };
