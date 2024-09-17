@@ -12,6 +12,14 @@ namespace ActivationFunctions {
 	double Sigmoid(double input);
 	double TanH(double input);
 	std::vector<double> Softmax(std::vector<double> input);
+
+	double DerivativeOf(double input, double (*activationFunction)(double));
+	double LinearDerivative(double input);
+	double BinaryStepDerivative(double input);
+	double ReLUDerivative(double input);
+	double LeakyReLUDerivative(double input);
+	double SigmoidDerivative(double input);
+	double TanHDerivative(double input);
 }
 
 class Layer {
@@ -29,6 +37,8 @@ public:
 };
 
 class NeuralNetwork {
+private:
+	double CostDerivative(double actualOutput, double expectedOutput);
 public:
 	std::vector<Layer> layers;
 	

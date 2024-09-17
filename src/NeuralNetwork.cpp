@@ -31,6 +31,41 @@ namespace ActivationFunctions {
 		}
 		return output;
 	}
+
+	double DerivativeOf(double input, double (*activationFunction)(double)) {
+		if (activationFunction == Sigmoid)
+			return SigmoidDerivative(input);
+		else if (activationFunction == TanH)
+			return TanHDerivative(input);
+		else if (activationFunction == Linear)
+			return LinearDerivative(input);
+		else if (activationFunction == BinaryStep)
+			return BinaryStepDerivative(input);
+		else if (activationFunction == ReLU)
+			return ReLUDerivative(input);
+		else if (activationFunction == LeakyReLU)
+			return LeakyReLUDerivative(input);
+	}
+	double LinearDerivative(double input) {
+		return 1;
+	}
+	double BinaryStepDerivative(double input) {
+		return 0;
+	}
+	double ReLUDerivative(double input) {
+		return (input >= 0);
+	}
+	double LeakyReLUDerivative(double input) {
+		if (input >= 0) return 1;
+		else return 0.1f;
+	}
+	double SigmoidDerivative(double input) {
+		double value = Sigmoid(input);
+		return value * (1 - value);
+	}
+	double TanHDerivative(double input) {
+		return 1.0f / pow((cosh(input)), 2);
+	}
 }
 
 Layer::Layer(int numOfNodes, int numOfIncomingNodes, double (*activationFunction)(double))
@@ -68,10 +103,10 @@ std::vector<double> Layer::FeedForward(std::vector<double>& input) {
 }
 
 NeuralNetwork::NeuralNetwork(std::vector<int> numberOfNeurons, double (*hiddenLayerAF)(double), double (*outputLayerAF)(double)) {
-	for (int i = 0; i < numberOfNeurons.size()-1; i++) {
-		layers.push_back(Layer(numberOfNeurons[i+1], numberOfNeurons[i], hiddenLayerAF));
+	for (int i = 1; i < numberOfNeurons.size(); i++) {
+		layers.push_back(Layer(numberOfNeurons[i], numberOfNeurons[i-1], hiddenLayerAF));
 	}
-	//layers[numberOfNeurons.size() - 2].SetActivationFunction(outputLayerAF);
+	layers[layers.size()-1].SetActivationFunction(outputLayerAF);
 }
 
 std::vector<double> NeuralNetwork::CalculateOutput(std::vector<double> input) {
@@ -91,6 +126,10 @@ double NeuralNetwork::Cost(std::vector<double> actualOutput, std::vector<double>
 	cost /= size;
 
 	return cost;
+}
+
+double NeuralNetwork::CostDerivative(double actualOutput, double expectedOutput) {
+	return 2 * (actualOutput - expectedOutput);
 }
 
 void NeuralNetwork::Learn(std::vector<double> trainingInputData, std::vector<double> expectedOutput, double learningRate) {
