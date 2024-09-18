@@ -34,7 +34,7 @@ std::vector<double> Layer::FeedForward(std::vector<double> input) {
 std::vector<double> Layer::CalculateOutputLayerNodeValues(std::vector<double> actualOutput, std::vector<double> expectedOutput) {
 	std::vector<double> nodeValues;
 	for (int i = 0; i < numOfNodes; i++) {
-		nodeValues.push_back(CostDerivative(actualOutput[i], expectedOutput[i]));
+		nodeValues.push_back(LossDerivative(actualOutput[i], expectedOutput[i]));
 		nodeValues[i] *= AF::DerivativeOf(weightedInputs[i], activationFunction);
 	}
 
@@ -78,6 +78,6 @@ std::vector<double> Layer::CalculateHiddenLayerNodeValues(Layer& oldLayer, std::
 	return newNodeValues;
 }
 
-double Layer::CostDerivative(double actualOutput, double expectedOutput) {
+double Layer::LossDerivative(double actualOutput, double expectedOutput) {
 	return 2 * (actualOutput - expectedOutput);
 }

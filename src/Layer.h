@@ -25,7 +25,7 @@ public:
 	void UpdateGradients(std::vector<double> nodeValues);
 	void ClearGradients();
 
-	double CostDerivative(double actualOutput, double expectedOutput);
+	double LossDerivative(double actualOutput, double expectedOutput);
 	std::vector<double> CalculateOutputLayerNodeValues(std::vector<double> actualOutput, std::vector<double> expectedOutput);
 	std::vector<double> CalculateHiddenLayerNodeValues(Layer& oldLayer, std::vector<double> oldNodeValues);
 };

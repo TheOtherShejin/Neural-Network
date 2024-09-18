@@ -14,7 +14,7 @@ std::vector<double> NeuralNetwork::CalculateOutput(std::vector<double> input) {
 	return input;
 }
 
-double NeuralNetwork::Cost(std::vector<double> actualOutput, std::vector<double> expectedOutput) {
+double NeuralNetwork::Loss(std::vector<double> actualOutput, std::vector<double> expectedOutput) {
 	double cost = 0.0f;
 	int size = actualOutput.size();
 
@@ -26,10 +26,10 @@ double NeuralNetwork::Cost(std::vector<double> actualOutput, std::vector<double>
 	return cost;
 }
 
-void NeuralNetwork::Learn(std::vector<double> trainingInputData, std::vector<double> expectedOutput, double learningRate) {
+void NeuralNetwork::Learn(DataPoint dataPoint, double learningRate) {
 	Layer& outputLayer = layers[layers.size() - 1];
-	std::vector<double> actualOutput = CalculateOutput(trainingInputData);
-	std::vector<double> nodeValues = outputLayer.CalculateOutputLayerNodeValues(actualOutput, expectedOutput);
+	std::vector<double> actualOutput = CalculateOutput(dataPoint.input);
+	std::vector<double> nodeValues = outputLayer.CalculateOutputLayerNodeValues(actualOutput, dataPoint.expectedOutput);
 	outputLayer.UpdateGradients(nodeValues);
 
 
@@ -38,10 +38,23 @@ void NeuralNetwork::Learn(std::vector<double> trainingInputData, std::vector<dou
 		layers[i].UpdateGradients(nodeValues);
 	}
 
+	ApplyAllGradients(learningRate);
+	ClearAllGradients();
+}
+
+void NeuralNetwork::Learn(std::vector<DataPoint> dataPoints, double learningRate) {
+	for (auto& dataPoint : dataPoints) {
+		Learn(dataPoint, learningRate);
+	}
+}
+
+void NeuralNetwork::ApplyAllGradients(double learningRate) {
 	for (auto& layer : layers) {
 		layer.ApplyGradients(learningRate);
 	}
-	
+}
+
+void NeuralNetwork::ClearAllGradients() {
 	for (auto& layer : layers) {
 		layer.ClearGradients();
 	}
