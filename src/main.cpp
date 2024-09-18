@@ -3,7 +3,8 @@
 
 int main() {
 	NeuralNetwork nn({ 2, 3, 1 }, ActivationFunctions::Sigmoid, ActivationFunctions::Sigmoid);
-	for (int i = 0; i < 1000; i++) {
+
+	for (int i = 0; i < 10000; i++) {
 		nn.Learn({ 0, 0 }, { 0 }, 1.5f);
 		nn.Learn({ 0, 1 }, { 1 }, 1.5f);
 		nn.Learn({ 1, 0 }, { 1 }, 1.5f);

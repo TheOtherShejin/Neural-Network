@@ -3,42 +3,9 @@
 #include <iostream>
 #include <math.h>
 #include <vector>
-
-namespace ActivationFunctions {
-	double Linear(double input);
-	double BinaryStep(double input);
-	double ReLU(double input);
-	double LeakyReLU(double input);
-	double Sigmoid(double input);
-	double TanH(double input);
-	std::vector<double> Softmax(std::vector<double> input);
-
-	double DerivativeOf(double input, double (*activationFunction)(double));
-	double LinearDerivative(double input);
-	double BinaryStepDerivative(double input);
-	double ReLUDerivative(double input);
-	double LeakyReLUDerivative(double input);
-	double SigmoidDerivative(double input);
-	double TanHDerivative(double input);
-}
-
-class Layer {
-	double (*activationFunction)(double) = nullptr;
-public:
-	int numOfNodes, numOfIncomingNodes;
-	std::vector<std::vector<double>> weights;
-	std::vector<std::vector<double>> weightCostGradients;
-	std::vector<double> biases;
-	std::vector<double> biasCostGradients;
-
-	Layer(int numOfNodes, int numOfIncomingNodes, double (*activationFunction)(double));
-	void SetActivationFunction(double (*activationFunction)(double));
-	std::vector<double> FeedForward(std::vector<double>& input);
-};
+#include "Layer.h"
 
 class NeuralNetwork {
-private:
-	double CostDerivative(double actualOutput, double expectedOutput);
 public:
 	std::vector<Layer> layers;
 	
