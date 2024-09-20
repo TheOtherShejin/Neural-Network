@@ -1,6 +1,7 @@
 #include "NeuralNetwork.h"
 
 NeuralNetwork::NeuralNetwork(std::vector<int> numberOfNeurons, double (*hiddenLayerAF)(double), double (*outputLayerAF)(double)) {
+	inputSize = numberOfNeurons[0];
 	for (int i = 1; i < numberOfNeurons.size(); i++) {
 		layers.push_back(Layer(numberOfNeurons[i], numberOfNeurons[i-1], hiddenLayerAF));
 	}
@@ -58,4 +59,15 @@ void NeuralNetwork::ClearAllGradients() {
 	for (auto& layer : layers) {
 		layer.ClearGradients();
 	}
+}
+
+int NeuralNetwork::GetInputSize() const {
+	return inputSize;
+}
+
+void NeuralNetwork::SetActivationFunctions(double (*hiddenLayerAF)(double), double (*outputLayerAF)(double)) {
+	for (auto& layer : layers) {
+		layer.activationFunction = hiddenLayerAF;
+	}
+	layers[layers.size() - 1].activationFunction = outputLayerAF;
 }

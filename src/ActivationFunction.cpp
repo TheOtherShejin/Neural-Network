@@ -19,7 +19,8 @@ namespace ActivationFunctions {
 	double TanH(double input) {
 		return tanh(input);
 	}
-	std::vector<double> Softmax(std::vector<double> input) {
+	// WIP
+	/*std::vector<double> Softmax(std::vector<double> input) {
 		std::vector<double> output;
 		double sum = 0;
 		for (int i = 0; i < input.size(); i++) {
@@ -30,21 +31,66 @@ namespace ActivationFunctions {
 			output[i] /= sum;
 		}
 		return output;
+	}*/
+
+	FunctionType GetFunctionEnum(double (*activationFunction)(double)) {
+		if (activationFunction == Sigmoid)
+			return FunctionType::SigmoidAF;
+		else if (activationFunction == TanH)
+			return FunctionType::TanHAF;
+		else if (activationFunction == ReLU)
+			return FunctionType::ReLUAF;
+		else if (activationFunction == Linear)
+			return FunctionType::LinearAF;
+		else if (activationFunction == BinaryStep)
+			return FunctionType::BinaryStepAF;
+		else if (activationFunction == LeakyReLU)
+			return FunctionType::LeakyReLUAF;
+	}
+	fptr GetFunctionFromEnum(FunctionType funcType) {
+		switch (funcType) {
+		case FunctionType::SigmoidAF:
+			return Sigmoid;
+			break;
+		case FunctionType::TanHAF:
+			return TanH;
+			break;
+		case FunctionType::ReLUAF:
+			return ReLU;
+			break;
+		case FunctionType::LinearAF:
+			return Linear;
+			break;
+		case FunctionType::BinaryStepAF:
+			return BinaryStep;
+			break;
+		case FunctionType::LeakyReLUAF:
+			return LeakyReLU;
+			break;
+		}
 	}
 
 	double DerivativeOf(double input, double (*activationFunction)(double)) {
-		if (activationFunction == Sigmoid)
+		switch (GetFunctionEnum(activationFunction)) {
+		case FunctionType::SigmoidAF:
 			return SigmoidDerivative(input);
-		else if (activationFunction == TanH)
+			break;
+		case FunctionType::TanHAF:
 			return TanHDerivative(input);
-		else if (activationFunction == Linear)
-			return LinearDerivative(input);
-		else if (activationFunction == BinaryStep)
-			return BinaryStepDerivative(input);
-		else if (activationFunction == ReLU)
+			break;
+		case FunctionType::ReLUAF:
 			return ReLUDerivative(input);
-		else if (activationFunction == LeakyReLU)
+			break;
+		case FunctionType::LinearAF:
+			return LinearDerivative(input);
+			break;
+		case FunctionType::BinaryStepAF:
+			return BinaryStepDerivative(input);
+			break;
+		case FunctionType::LeakyReLUAF:
 			return LeakyReLUDerivative(input);
+			break;
+		}
 	}
 	double LinearDerivative(double input) {
 		return 1;
