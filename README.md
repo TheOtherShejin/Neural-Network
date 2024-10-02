@@ -15,3 +15,11 @@ The `NeuralNetwork::Learn()` function takes in the input data (1st parameter), e
 nn.CalculateOutput({1, 0});
 ```
 The `NeuralNetwork::CalculateOutput()` takes in an input data, and then the neural network does it's thing and spits out an output as an `std::vector<double>`
+```cpp
+SaveModelToCSV("myModel.csv", &nn);
+```
+The `SaveModelToCSV()` saves the neural network model and outputs the weights, biases etc as .csv file.
+```cpp
+NeuralNetwork neuralNetwork = LoadModelFromCSV("myModel.csv");
+```
+The `LoadModelFromCSV()` function loads the .csv file from the specified path and outputs a neural network with the desired parameters.
