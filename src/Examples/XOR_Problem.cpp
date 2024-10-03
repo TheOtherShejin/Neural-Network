@@ -17,6 +17,7 @@ quit
 void XOR_Problem() {
 	NeuralNetwork nn({ 2, 3, 1 }, ActivationFunctions::Sigmoid, ActivationFunctions::Sigmoid);
 	bool runProgram = true;
+	std::cout << "Enter help to get help.\n";
 	while (runProgram) {
 		std::string command;
 		std::cout << "Enter a command:\n";
@@ -89,6 +90,18 @@ void XOR_Problem() {
 		}
 		else if (commandTokens[0] == "quit") {
 			runProgram = false;
+		}
+		else if (commandTokens[0] == "help") {
+			std::cout << 
+				"Commands:\n"
+				"------------\n"
+				"Replace the parameters in brackets with just the parameter values as shown for example:\n"
+				"train 10000 1.5\n\n"
+				"train [epochs] [learningRate]\n"
+				"test\n"
+				"save [saveLocation]\n"
+				"load [loadLocation]\n"
+				"quit\n\n";
 		}
 	}
 }
