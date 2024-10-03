@@ -127,17 +127,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\ActivationFunction.cpp" />
-    <ClCompile Include="src\Layer.cpp" />
+    <ClCompile Include="src\Examples\XOR_Problem.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\ModelExporter.cpp" />
-    <ClCompile Include="src\NeuralNetwork.cpp" />
+    <ClCompile Include="src\NeuralNetwork\ActivationFunction.cpp" />
+    <ClCompile Include="src\NeuralNetwork\Layer.cpp" />
+    <ClCompile Include="src\NeuralNetwork\ModelExporter.cpp" />
+    <ClCompile Include="src\NeuralNetwork\NeuralNetwork.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ActivationFunction.h" />
-    <ClInclude Include="src\Layer.h" />
-    <ClInclude Include="src\ModelExporter.h" />
-    <ClInclude Include="src\NeuralNetwork.h" />
+    <ClInclude Include="src\Examples\XOR_Problem.h" />
+    <ClInclude Include="src\NeuralNetwork\ActivationFunction.h" />
+    <ClInclude Include="src\NeuralNetwork\Layer.h" />
+    <ClInclude Include="src\NeuralNetwork\ModelExporter.h" />
+    <ClInclude Include="src\NeuralNetwork\NeuralNetwork.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

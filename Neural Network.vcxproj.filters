@@ -13,36 +13,54 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Neural Network">
+      <UniqueIdentifier>{c2dcc6ce-021d-49d2-8b21-aabd27c082f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Neural Network">
+      <UniqueIdentifier>{92190b4f-0d2d-4edd-971b-8a1f40a7b42a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Examples">
+      <UniqueIdentifier>{01d26a8f-d806-4089-b071-a326ebde7e81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Examples">
+      <UniqueIdentifier>{4de1ad95-64a0-4ff9-9975-34f2c38285b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\NeuralNetwork.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\NeuralNetwork\Layer.cpp">
+      <Filter>Source Files\Neural Network</Filter>
     </ClCompile>
-    <ClCompile Include="src\Layer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\NeuralNetwork\ActivationFunction.cpp">
+      <Filter>Source Files\Neural Network</Filter>
     </ClCompile>
-    <ClCompile Include="src\ActivationFunction.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\NeuralNetwork\ModelExporter.cpp">
+      <Filter>Source Files\Neural Network</Filter>
     </ClCompile>
-    <ClCompile Include="src\ModelExporter.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\NeuralNetwork\NeuralNetwork.cpp">
+      <Filter>Source Files\Neural Network</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Examples\XOR_Problem.cpp">
+      <Filter>Source Files\Examples</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\NeuralNetwork.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\NeuralNetwork\NeuralNetwork.h">
+      <Filter>Header Files\Neural Network</Filter>
     </ClInclude>
-    <ClInclude Include="src\Layer.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\NeuralNetwork\ActivationFunction.h">
+      <Filter>Header Files\Neural Network</Filter>
     </ClInclude>
-    <ClInclude Include="src\ActivationFunction.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\NeuralNetwork\Layer.h">
+      <Filter>Header Files\Neural Network</Filter>
     </ClInclude>
-    <ClInclude Include="src\ModelExporter.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="src\NeuralNetwork\ModelExporter.h">
+      <Filter>Header Files\Neural Network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Examples\XOR_Problem.h">
+      <Filter>Header Files\Examples</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
