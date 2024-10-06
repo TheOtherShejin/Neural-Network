@@ -45,6 +45,9 @@
     <ClCompile Include="src\Examples\XOR_Problem.cpp">
       <Filter>Source Files\Examples</Filter>
     </ClCompile>
+    <ClCompile Include="src\Examples\MNIST_Processor.cpp">
+      <Filter>Source Files\Examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\NeuralNetwork\NeuralNetwork.h">
@@ -60,6 +63,9 @@
       <Filter>Header Files\Neural Network</Filter>
     </ClInclude>
     <ClInclude Include="src\Examples\XOR_Problem.h">
+      <Filter>Header Files\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Examples\MNIST_Processor.h">
       <Filter>Header Files\Examples</Filter>
     </ClInclude>
   </ItemGroup>

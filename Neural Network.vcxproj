@@ -70,6 +70,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(SolutionDir)\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(SolutionDir)\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -127,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Examples\MNIST_Processor.cpp" />
     <ClCompile Include="src\Examples\XOR_Problem.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\NeuralNetwork\ActivationFunction.cpp" />
@@ -135,6 +142,7 @@
     <ClCompile Include="src\NeuralNetwork\NeuralNetwork.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Examples\MNIST_Processor.h" />
     <ClInclude Include="src\Examples\XOR_Problem.h" />
     <ClInclude Include="src\NeuralNetwork\ActivationFunction.h" />
     <ClInclude Include="src\NeuralNetwork\Layer.h" />

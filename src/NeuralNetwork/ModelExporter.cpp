@@ -100,5 +100,6 @@ NeuralNetwork LoadModelFromCSV(std::string path) {
 		}
 	}
 
+	file.close();
 	return nn;
 }
