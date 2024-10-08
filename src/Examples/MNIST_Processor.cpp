@@ -1,4 +1,4 @@
-#include "MNIST_Processor.h"
+/*#include "MNIST_Processor.h"
 
 void LoadNormalizeAndSave(std::string path, std::string savePath) {
 	std::ifstream rawFile;
@@ -52,4 +52,4 @@ std::vector<DataPoint> LoadIntoDataset(std::string path) {
 		dataset.push_back(DataPoint(input, expectedOutput));
 		input[number] = 0;
 	}
-}
+}*/

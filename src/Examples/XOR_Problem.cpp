@@ -15,7 +15,7 @@ quit
 */
 
 void XOR_Problem() {
-	NeuralNetwork nn({ 2, 3, 1 }, ActivationFunctions::Sigmoid, ActivationFunctions::Sigmoid);
+	NeuralNetwork nn({2, 3, 1}, ActivationFunctions::Sigmoid, ActivationFunctions::Sigmoid);
 	bool runProgram = true;
 	std::cout << "Enter help to get help.\n";
 	while (runProgram) {
@@ -35,10 +35,10 @@ void XOR_Problem() {
 			float learningRate = std::stof(commandTokens[2]);
 
 			std::vector<DataPoint> dataPoints = {
-			{ {0, 0}, {0} },
-			{ {0, 1}, {1} },
-			{ {1, 0}, {1} },
-			{ {1, 1}, {0} }
+				{ Eigen::VectorXd{{0, 0}}, Eigen::VectorXd{{0}} },
+				{ Eigen::VectorXd{{0, 1}}, Eigen::VectorXd{{1}} },
+				{ Eigen::VectorXd{{1, 0}}, Eigen::VectorXd{{1}} },
+				{ Eigen::VectorXd{{1, 1}}, Eigen::VectorXd{{0}} }
 			};
 
 			// Training
@@ -47,37 +47,37 @@ void XOR_Problem() {
 			for (int i = 0; i < epochs; i++) {
 				nn.Learn(dataPoints, learningRate);
 
-				if (i % (int)(epochs / 10) == 0) {
-					std::vector<double> output;
-					double avgLoss = 0.0f;
+				if (i % (int)round(epochs / 10.0f) == 0) {
+					Eigen::VectorXd output;
+					double avgCost = 0.0f;
 					for (int j = 0; j < 4; j++) {
 						int a = j & 1;
 						int b = (j & 2) >> 1;
-						output = nn.CalculateOutput({ (double)a, (double)b });
-						avgLoss += nn.Loss(output, { (double)(a ^ b) });
+						output = nn.CalculateOutput(Eigen::VectorXd{ { (double)a, (double)b } });
+						avgCost += nn.Cost(output, Eigen::VectorXd{ { (double)(a ^ b) } });
 					}
-					avgLoss /= 4;
-					std::cout << "Epoch: " << i << ", Average Loss: " << avgLoss << '\n';
+					avgCost /= 4;
+					std::cout << "Epoch: " << i << ", Average Cost: " << avgCost << '\n';
 				}
 			}
 			auto endTime = std::chrono::high_resolution_clock::now();
 			auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
 			std::cout << "Elapsed Time For Training: " << dt.count() * 0.001f << "s\n\n";
 		}
-		else if (commandTokens[0] == "test") {
+		if (commandTokens[0] == "test") {
 			// Output
-			std::vector<double> output;
-			double avgLoss = 0.0f;
+			Eigen::VectorXd output;
+			double avgCost = 0.0f;
 			std::cout << "XOR Problem Example:\n";
 			for (int i = 0; i < 4; i++) {
 				int a = i & 1;
 				int b = (i & 2) >> 1;
-				output = nn.CalculateOutput({ (double)a, (double)b });
-				avgLoss += nn.Loss(output, { (double)(a ^ b) });
+				output = nn.CalculateOutput(Eigen::VectorXd{ { (double)a, (double)b } });
+				avgCost += nn.Cost(output, Eigen::VectorXd{ { (double)(a ^ b) } });
 				std::cout << (output[0] > 0.5f ? 1 : 0) << ' ' << output[0] << '\n';
 			}
-			avgLoss /= 4;
-			std::cout << "Average Loss: " << avgLoss << "\n\n";
+			avgCost /= 4;
+			std::cout << "Average Cost: " << avgCost << "\n\n";
 
 		}
 		else if (commandTokens[0] == "load") {
@@ -90,6 +90,9 @@ void XOR_Problem() {
 		}
 		else if (commandTokens[0] == "quit") {
 			runProgram = false;
+		}
+		else if (commandTokens[0] == "reset") {
+			nn = NeuralNetwork({ 2, 3, 1 }, ActivationFunctions::Sigmoid, ActivationFunctions::Sigmoid);
 		}
 		else if (commandTokens[0] == "help") {
 			std::cout << 

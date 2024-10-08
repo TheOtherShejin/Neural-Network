@@ -19,7 +19,7 @@ void SaveModelToCSV(std::string path, NeuralNetwork* nn) {
 	for (auto& layer : nn->layers) {
 		for (int i = 0; i < layer.numOfNodes; i++) {
 			for (int j = 0; j < layer.numOfIncomingNodes; j++) {
-				file << layer.weights[i][j] << ',';
+				file << layer.weights(i, j) << ',';
 			}
 		}
 		file << '\n';
@@ -28,7 +28,7 @@ void SaveModelToCSV(std::string path, NeuralNetwork* nn) {
 	// Write Biases of Each Layer
 	for (auto& layer : nn->layers) {
 		for (int i = 0; i < layer.numOfNodes; i++) {
-			file << layer.biases[i] << ',';
+			file << layer.biases(i) << ',';
 		}
 		file << '\n';
 	}
@@ -78,7 +78,7 @@ NeuralNetwork LoadModelFromCSV(std::string path) {
 		Layer& layer = nn.layers[i];
 		for (int j = 0; j < layer.numOfNodes; j++) {
 			for (int k = 0; k < layer.numOfIncomingNodes; k++) {
-				layer.weights[j][k] = weights[j * layer.numOfIncomingNodes + k];
+				layer.weights(j, k) = weights[j * layer.numOfIncomingNodes + k];
 			}
 		}
 	}
@@ -96,7 +96,7 @@ NeuralNetwork LoadModelFromCSV(std::string path) {
 
 		Layer& layer = nn.layers[i];
 		for (int j = 0; j < layer.numOfNodes; j++) {
-			layer.biases[j] = biases[j];
+			layer.biases(j) = biases[j];
 		}
 	}
 

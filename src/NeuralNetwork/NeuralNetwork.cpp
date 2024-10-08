@@ -8,35 +8,27 @@ NeuralNetwork::NeuralNetwork(std::vector<int> numberOfNeurons, double (*hiddenLa
 	layers[layers.size()-1].activationFunction = outputLayerAF;
 }
 
-std::vector<double> NeuralNetwork::CalculateOutput(std::vector<double> input) {
+Eigen::VectorXd NeuralNetwork::CalculateOutput(Eigen::VectorXd input) {
 	for (int i = 0; i < layers.size(); i++) {
 		input = layers[i].FeedForward(input);
 	}
 	return input;
 }
 
-double NeuralNetwork::Loss(std::vector<double> actualOutput, std::vector<double> expectedOutput) {
-	double cost = 0.0f;
-	int size = actualOutput.size();
-
-	for (int i = 0; i < size; i++) {
-		cost += pow(actualOutput[i] - expectedOutput[i], 2);
-	}
-	cost /= size;
-
-	return cost;
+double NeuralNetwork::Cost(Eigen::VectorXd actualOutput, Eigen::VectorXd expectedOutput) {
+	return (actualOutput - expectedOutput).squaredNorm() * 0.5;
 }
 
 void NeuralNetwork::Learn(DataPoint dataPoint, double learningRate) {
 	Layer& outputLayer = layers[layers.size() - 1];
-	std::vector<double> actualOutput = CalculateOutput(dataPoint.input);
-	std::vector<double> nodeValues = outputLayer.CalculateOutputLayerNodeValues(actualOutput, dataPoint.expectedOutput);
-	outputLayer.UpdateGradients(nodeValues);
+	Eigen::VectorXd actualOutput = CalculateOutput(dataPoint.input);
+	Eigen::VectorXd errors = outputLayer.CalculateOutputLayerErrors(actualOutput, dataPoint.expectedOutput);
+	outputLayer.UpdateGradients(errors);
 
 
 	for (int i = layers.size() - 2; i >= 0; i--) {
-		nodeValues = layers[i].CalculateHiddenLayerNodeValues(layers[i + 1], nodeValues);
-		layers[i].UpdateGradients(nodeValues);
+		errors = layers[i].CalculateHiddenLayerErrors(layers[i + 1], errors);
+		layers[i].UpdateGradients(errors);
 	}
 
 	ApplyAllGradients(learningRate);

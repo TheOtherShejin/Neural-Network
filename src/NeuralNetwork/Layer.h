@@ -5,27 +5,32 @@
 #include <vector>
 #include "ActivationFunction.h"
 #include <iostream>
+#include <Eigen/Eigen>
 
 class Layer {
 public:
 	double (*activationFunction)(double) = nullptr;
-	std::vector<double> weightedInputs;
-	std::vector<double> rawInputs;
+	Eigen::VectorXd weightedInputs;
+	Eigen::VectorXd rawInputs;
 
 	int numOfNodes, numOfIncomingNodes;
-	std::vector<std::vector<double>> weights;
-	std::vector<std::vector<double>> weightCostGradients;
-	std::vector<double> biases;
-	std::vector<double> biasCostGradients;
+
+	Eigen::MatrixXd weights;
+	Eigen::MatrixXd weightCostGradients;
+	Eigen::VectorXd biases;
+	Eigen::VectorXd biasCostGradients;
 
 	Layer(int numOfNodes, int numOfIncomingNodes, double (*activationFunction)(double));
-	std::vector<double> FeedForward(std::vector<double> input);
+	Eigen::VectorXd FeedForward(Eigen::VectorXd input);
 
 	void ApplyGradients(double learningRate);
-	void UpdateGradients(std::vector<double> nodeValues);
+	void UpdateGradients(Eigen::VectorXd nodeValues);
 	void ClearGradients();
 
-	double LossDerivative(double actualOutput, double expectedOutput);
-	std::vector<double> CalculateOutputLayerNodeValues(std::vector<double> actualOutput, std::vector<double> expectedOutput);
-	std::vector<double> CalculateHiddenLayerNodeValues(Layer& oldLayer, std::vector<double> oldNodeValues);
+	Eigen::VectorXd CostDerivative(Eigen::VectorXd actualOutput, Eigen::VectorXd expectedOutput);
+	Eigen::VectorXd CalculateOutputLayerErrors(Eigen::VectorXd actualOutput, Eigen::VectorXd expectedOutput);
+	Eigen::VectorXd CalculateHiddenLayerErrors(Layer& nextLayer, Eigen::VectorXd nextLayerErrors);
 };
+
+Eigen::VectorXd Sigmoid(Eigen::VectorXd input);
+Eigen::VectorXd SigmoidDerivative(Eigen::VectorXd input);
