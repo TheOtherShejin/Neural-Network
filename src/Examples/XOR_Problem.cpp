@@ -22,6 +22,7 @@ void XOR_Problem() {
 		std::string command;
 		std::cout << "Enter a command:\n";
 		std::getline(std::cin, command);
+		if (command == "") continue;
 
 		std::stringstream commandSS(command);
 		std::vector<std::string> commandTokens;

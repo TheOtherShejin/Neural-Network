@@ -34,10 +34,11 @@ void Layer::ApplyGradients(double learningRate) {
 void Layer::UpdateGradients(Eigen::VectorXd errors) {
 	for (int i = 0; i < numOfNodes; i++) {
 		for (int j = 0; j < numOfIncomingNodes; j++) {
-			weightCostGradients(i, j) += rawInputs(j) * errors(i);
+			weightCostGradients(i, j) = rawInputs(j) * errors(i);
 		}
 	}
-	biasCostGradients += errors;
+	//weightCostGradients += errors * rawInputs.transpose();
+	biasCostGradients = errors;
 }
 
 void Layer::ClearGradients() {
@@ -54,6 +55,7 @@ Eigen::VectorXd Layer::CalculateOutputLayerErrors(Eigen::VectorXd actualOutput, 
 Eigen::VectorXd Layer::CalculateHiddenLayerErrors(Layer& nextLayer, Eigen::VectorXd nextLayerErrors) {
 	Eigen::VectorXd errors = nextLayer.weights.transpose() * nextLayerErrors;
 	errors = errors.cwiseProduct(SigmoidDerivative(weightedInputs));
+
 	return errors;
 }
 

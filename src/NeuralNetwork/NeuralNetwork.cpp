@@ -22,9 +22,9 @@ double NeuralNetwork::Cost(Eigen::VectorXd actualOutput, Eigen::VectorXd expecte
 void NeuralNetwork::Learn(DataPoint dataPoint, double learningRate) {
 	Layer& outputLayer = layers[layers.size() - 1];
 	Eigen::VectorXd actualOutput = CalculateOutput(dataPoint.input);
+
 	Eigen::VectorXd errors = outputLayer.CalculateOutputLayerErrors(actualOutput, dataPoint.expectedOutput);
 	outputLayer.UpdateGradients(errors);
-
 
 	for (int i = layers.size() - 2; i >= 0; i--) {
 		errors = layers[i].CalculateHiddenLayerErrors(layers[i + 1], errors);
