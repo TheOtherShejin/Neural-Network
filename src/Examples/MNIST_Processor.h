@@ -1,4 +1,4 @@
-/*#pragma once
+#pragma once
 
 #include <string>
 #include <sstream>
@@ -8,4 +8,4 @@
 #include <vector>
 
 void LoadNormalizeAndSave(std::string path, std::string savePath);
-std::vector<DataPoint> LoadIntoDataset(std::string path);*/
+std::vector<DataPoint> LoadIntoDataset(std::string path);

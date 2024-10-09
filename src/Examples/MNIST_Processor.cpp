@@ -1,4 +1,4 @@
-/*#include "MNIST_Processor.h"
+#include "MNIST_Processor.h"
 
 void LoadNormalizeAndSave(std::string path, std::string savePath) {
 	std::ifstream rawFile;
@@ -37,19 +37,23 @@ std::vector<DataPoint> LoadIntoDataset(std::string path) {
 	}
 
 	std::string line, substring;
-	std::vector<double> input = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-	std::vector<double> expectedOutput;
+	Eigen::VectorXd input(784);
+	input.setZero();
+	Eigen::VectorXd expectedOutput{ {0, 0, 0, 0, 0, 0, 0, 0, 0, 0} };
 	std::stringstream ss(line);
 	while (std::getline(file, line)) {
 		ss = std::stringstream(line);
-		expectedOutput.clear();
 		std::getline(ss, substring, ',');
 		int number = std::stoi(substring);
-		input[number] = 1;
+		expectedOutput(number) = 1;
+
+		int index = 0;
 		while (std::getline(ss, substring, ',')) {
-			expectedOutput.push_back(std::stod(substring));
+			input(index) = std::stod(substring);
+			index++;
 		}
+
 		dataset.push_back(DataPoint(input, expectedOutput));
-		input[number] = 0;
+		expectedOutput(number) = 0;
 	}
-}*/
+}
