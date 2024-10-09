@@ -21,6 +21,7 @@ public:
 	Eigen::VectorXd biasCostGradients;
 
 	Layer(int numOfNodes, int numOfIncomingNodes, double (*activationFunction)(double));
+	void RandomizeParameters();
 	Eigen::VectorXd FeedForward(Eigen::VectorXd input);
 
 	void ApplyGradients(double learningRate);

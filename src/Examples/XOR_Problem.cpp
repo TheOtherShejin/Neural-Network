@@ -54,7 +54,7 @@ void XOR_Problem() {
 					for (int j = 0; j < 4; j++) {
 						int a = j & 1;
 						int b = (j & 2) >> 1;
-						output = nn.CalculateOutput(Eigen::VectorXd{ { (double)a, (double)b } });
+						output = nn.Evaluate(Eigen::VectorXd{ { (double)a, (double)b } });
 						avgCost += nn.Cost(output, Eigen::VectorXd{ { (double)(a ^ b) } });
 					}
 					avgCost /= 4;
@@ -73,7 +73,7 @@ void XOR_Problem() {
 			for (int i = 0; i < 4; i++) {
 				int a = i & 1;
 				int b = (i & 2) >> 1;
-				output = nn.CalculateOutput(Eigen::VectorXd{ { (double)a, (double)b } });
+				output = nn.Evaluate(Eigen::VectorXd{ { (double)a, (double)b } });
 				avgCost += nn.Cost(output, Eigen::VectorXd{ { (double)(a ^ b) } });
 				std::cout << (output[0] > 0.5f ? 1 : 0) << ' ' << output[0] << '\n';
 			}
@@ -93,7 +93,7 @@ void XOR_Problem() {
 			runProgram = false;
 		}
 		else if (commandTokens[0] == "reset") {
-			nn = NeuralNetwork({ 2, 3, 1 }, ActivationFunctions::Sigmoid, ActivationFunctions::Sigmoid);
+			nn.RandomizeAllParameters();
 		}
 		else if (commandTokens[0] == "help") {
 			std::cout << 

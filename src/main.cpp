@@ -51,7 +51,7 @@ int main() {
 			double cost = 0.0f;
 			int correctPredictions = 0;
 			for (int i = 0; i < test_dataset.size(); i++) {
-				output = nn.CalculateOutput(test_dataset[i].input);
+				output = nn.Evaluate(test_dataset[i].input);
 				cost += nn.Cost(output, test_dataset[i].expectedOutput);
 
 				int prediction = 0;
@@ -80,7 +80,7 @@ int main() {
 			runProgram = false;
 		}
 		else if (commandTokens[0] == "reset") {
-			nn = NeuralNetwork({ 2, 3, 1 }, ActivationFunctions::Sigmoid, ActivationFunctions::Sigmoid);
+			nn.RandomizeAllParameters();
 		}
 		else if (commandTokens[0] == "help") {
 			std::cout <<

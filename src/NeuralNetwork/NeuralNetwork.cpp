@@ -8,7 +8,13 @@ NeuralNetwork::NeuralNetwork(std::vector<int> numberOfNeurons, double (*hiddenLa
 	layers[layers.size()-1].activationFunction = outputLayerAF;
 }
 
-Eigen::VectorXd NeuralNetwork::CalculateOutput(Eigen::VectorXd input) {
+void NeuralNetwork::RandomizeAllParameters() {
+	for (auto& layer : layers) {
+		layer.RandomizeParameters();
+	}
+}
+
+Eigen::VectorXd NeuralNetwork::Evaluate(Eigen::VectorXd input) {
 	for (int i = 0; i < layers.size(); i++) {
 		input = layers[i].FeedForward(input);
 	}
@@ -21,7 +27,7 @@ double NeuralNetwork::Cost(Eigen::VectorXd actualOutput, Eigen::VectorXd expecte
 
 void NeuralNetwork::Learn(DataPoint dataPoint, double learningRate) {
 	Layer& outputLayer = layers[layers.size() - 1];
-	Eigen::VectorXd actualOutput = CalculateOutput(dataPoint.input);
+	Eigen::VectorXd actualOutput = Evaluate(dataPoint.input);
 
 	Eigen::VectorXd errors = outputLayer.CalculateOutputLayerErrors(actualOutput, dataPoint.expectedOutput);
 	outputLayer.UpdateGradients(errors);

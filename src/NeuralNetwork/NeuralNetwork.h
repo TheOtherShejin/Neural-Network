@@ -20,7 +20,8 @@ public:
 	std::vector<Layer> layers;
 	
 	NeuralNetwork(std::vector<int> numberOfNeurons, double (*hiddenLayerAF)(double), double (*outputLayerAF)(double));
-	Eigen::VectorXd CalculateOutput(Eigen::VectorXd input);
+	void RandomizeAllParameters();
+	Eigen::VectorXd Evaluate(Eigen::VectorXd input);
 	double Cost(Eigen::VectorXd actualOutput, Eigen::VectorXd expectedOutput);
 	void Learn(DataPoint dataPoint, double learningRate);
 	void Learn(std::vector<DataPoint> dataPoints, double learningRate);

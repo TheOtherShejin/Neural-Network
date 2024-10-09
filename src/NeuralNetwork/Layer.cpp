@@ -7,7 +7,10 @@ Layer::Layer(int numOfNodes, int numOfIncomingNodes, double (*activationFunction
 	weightCostGradients = Eigen::MatrixXd::Zero(numOfNodes, numOfIncomingNodes);
 	biases = Eigen::VectorXd(numOfNodes);
 	biasCostGradients = Eigen::VectorXd::Zero(numOfNodes);
+	RandomizeParameters();
+}
 
+void Layer::RandomizeParameters() {
 	srand(time(0));
 	for (int i = 0; i < numOfNodes; i++) {
 		for (int j = 0; j < numOfIncomingNodes; j++) {
