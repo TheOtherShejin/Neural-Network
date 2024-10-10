@@ -29,19 +29,19 @@ Eigen::VectorXd Layer::FeedForward(Eigen::VectorXd input) {
 	return output;
 }
 
-void Layer::ApplyGradients(double learningRate) {
-	weights -= weightCostGradients * learningRate;
-	biases -= biasCostGradients * learningRate;
+void Layer::ApplyGradients(double learningRate, int miniBatchSize) {
+	weights -= weightCostGradients * (learningRate / miniBatchSize);
+	biases -= biasCostGradients * (learningRate / miniBatchSize);
 }
 
 void Layer::UpdateGradients(Eigen::VectorXd errors) {
 	for (int i = 0; i < numOfNodes; i++) {
 		for (int j = 0; j < numOfIncomingNodes; j++) {
-			weightCostGradients(i, j) = rawInputs(j) * errors(i);
+			weightCostGradients(i, j) += rawInputs(j) * errors(i);
 		}
 	}
 	//weightCostGradients += errors * rawInputs.transpose();
-	biasCostGradients = errors;
+	biasCostGradients += errors;
 }
 
 void Layer::ClearGradients() {

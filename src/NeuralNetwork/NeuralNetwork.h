@@ -13,7 +13,7 @@ struct DataPoint {
 
 class NeuralNetwork {
 private:
-	void ApplyAllGradients(double learningRate);
+	void ApplyAllGradients(double learningRate, int miniBatchSize);
 	void ClearAllGradients();
 	int inputSize;
 public:
@@ -24,7 +24,7 @@ public:
 	Eigen::VectorXd Evaluate(Eigen::VectorXd input);
 	double Cost(Eigen::VectorXd actualOutput, Eigen::VectorXd expectedOutput);
 	void Learn(DataPoint dataPoint, double learningRate);
-	void Learn(std::vector<DataPoint> dataPoints, double learningRate);
+	void Learn(std::vector<DataPoint> dataset, double learningRate, int miniBatchSize);
 	int GetInputSize() const;
 	void SetActivationFunctions(double (*hiddenLayerAF)(double), double (*outputLayerAF)(double));
 };

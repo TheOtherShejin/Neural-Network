@@ -24,7 +24,7 @@ public:
 	void RandomizeParameters();
 	Eigen::VectorXd FeedForward(Eigen::VectorXd input);
 
-	void ApplyGradients(double learningRate);
+	void ApplyGradients(double learningRate, int miniBatchSize);
 	void UpdateGradients(Eigen::VectorXd nodeValues);
 	void ClearGradients();
 

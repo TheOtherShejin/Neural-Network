@@ -27,15 +27,16 @@ int main() {
 		if (commandTokens[0] == "train") {
 			int epochs = std::stoi(commandTokens[1]);
 			float learningRate = std::stof(commandTokens[2]);
+			int miniBatchSize = std::stoi(commandTokens[3]);
 
 			// Training
 			float totalTimeTaken = 0.0f;
-			std::cout << "Training Started - " << epochs << " Epochs, Learning Rate: " << learningRate << '\n';
+			std::cout << "Training Started - " << epochs << " Epochs, Learning Rate: " << learningRate << ", Mini-Batch Size: " << miniBatchSize << '\n';
 			for (int i = 0; i < epochs; i++) {
 				std::cout << "Epoch: " << i;
 				
 				auto startTime = std::chrono::high_resolution_clock::now();
-				nn.Learn(train_dataset, learningRate);
+				nn.Learn(train_dataset, learningRate, miniBatchSize);
 				auto endTime = std::chrono::high_resolution_clock::now();
 				auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
 
@@ -87,11 +88,12 @@ int main() {
 				"Commands:\n"
 				"------------\n"
 				"Replace the parameters in brackets with just the parameter values as shown for example:\n"
-				"train 10000 1.5\n\n"
-				"train [epochs] [learningRate]\n"
+				"train 30 3 10\n\n"
+				"train [epochs] [learningRate] [miniBatchSize]\n"
 				"test\n"
 				"save [saveLocation]\n"
 				"load [loadLocation]\n"
+				"reset"
 				"quit\n\n";
 		}
 	}

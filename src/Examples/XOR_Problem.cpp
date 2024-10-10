@@ -46,7 +46,7 @@ void XOR_Problem() {
 			std::cout << "Training Started - " << epochs << " Epochs, Learning Rate: " << learningRate << '\n';
 			auto startTime = std::chrono::high_resolution_clock::now();
 			for (int i = 0; i < epochs; i++) {
-				nn.Learn(dataPoints, learningRate);
+				nn.Learn(dataPoints, learningRate, 4);
 
 				if (i % (int)round(epochs / 10.0f) == 0) {
 					Eigen::VectorXd output;
