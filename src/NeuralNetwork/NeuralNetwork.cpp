@@ -25,45 +25,47 @@ double NeuralNetwork::Cost(Eigen::VectorXd actualOutput, Eigen::VectorXd expecte
 	return (actualOutput - expectedOutput).squaredNorm() * 0.5;
 }
 
-void NeuralNetwork::Learn(DataPoint dataPoint, double learningRate) {
-	// Feedforward
-	Eigen::VectorXd actualOutput = Evaluate(dataPoint.input);
+void NeuralNetwork::BackPropagate(DataPoint* dataPoint, Eigen::VectorXd* actualOutput) {
 	Layer& outputLayer = layers[layers.size() - 1];
 
 	// Error
-	Eigen::VectorXd errors = outputLayer.CalculateOutputLayerErrors(actualOutput, dataPoint.expectedOutput);
+	Eigen::VectorXd errors = outputLayer.CalculateOutputLayerErrors(*actualOutput, dataPoint->expectedOutput);
 	outputLayer.UpdateGradients(errors);
 
 	for (int i = layers.size() - 2; i >= 0; i--) {
 		errors = layers[i].CalculateHiddenLayerErrors(layers[i + 1], errors);
 		layers[i].UpdateGradients(errors);
 	}
+}
 
-	// Gradient Descent
-	ApplyAllGradients(learningRate, 1);
-	ClearAllGradients();
+void NeuralNetwork::SGD(std::vector<DataPoint>* dataset, int epochs, double learningRate, int miniBatchSize) {
+	float totalTimeTaken = 0.0f;
+	std::cout << "Training Started - " << epochs << " Epochs, Learning Rate: " << learningRate << ", Mini-Batch Size: " << miniBatchSize << '\n';
+	for (int i = 0; i < epochs; i++) {
+		std::cout << "Epoch: " << i;
+
+		// Randomize Train
+		std::shuffle(dataset->begin(), dataset->end(), std::mt19937{std::random_device{}()});
+
+		auto startTime = std::chrono::high_resolution_clock::now();
+		Learn(*dataset, learningRate, miniBatchSize);
+		auto endTime = std::chrono::high_resolution_clock::now();
+		auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+
+		std::cout << " - " << (dt.count() * 0.001f) << "s\n";
+		totalTimeTaken += dt.count() * 0.001f;
+	}
+	std::cout << "Training Completed in " << totalTimeTaken << "s\n";
 }
 
 void NeuralNetwork::Learn(std::vector<DataPoint> dataset, double learningRate, int miniBatchSize) {
-	/*for (auto& dataPoint : dataPoints) {
-		Learn(dataPoint, learningRate);
-	}*/
-
 	for (int i = 0; i < (dataset.size() / miniBatchSize); i++) {
 		for (int j = 0; j < miniBatchSize; j++) {
 			int index = j + i * miniBatchSize;
 			// Feedforward
 			Eigen::VectorXd actualOutput = Evaluate(dataset[index].input);
-			Layer& outputLayer = layers[layers.size() - 1];
 
-			// Error
-			Eigen::VectorXd errors = outputLayer.CalculateOutputLayerErrors(actualOutput, dataset[index].expectedOutput);
-			outputLayer.UpdateGradients(errors);
-
-			for (int i = layers.size() - 2; i >= 0; i--) {
-				errors = layers[i].CalculateHiddenLayerErrors(layers[i + 1], errors);
-				layers[i].UpdateGradients(errors);
-			}
+			BackPropagate(&dataset[index], &actualOutput);
 		}
 
 		// Gradient Descent

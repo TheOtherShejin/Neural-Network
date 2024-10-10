@@ -1,6 +1,8 @@
 #include "Examples/MNIST_Processor.h"
 #include "NeuralNetwork/ModelExporter.h"
 #include <chrono>
+#include <algorithm>
+#include <random>
 
 int main() {
 	NeuralNetwork nn({ 784, 30, 10 }, ActivationFunctions::Sigmoid, ActivationFunctions::Sigmoid);
@@ -26,24 +28,11 @@ int main() {
 
 		if (commandTokens[0] == "train") {
 			int epochs = std::stoi(commandTokens[1]);
-			float learningRate = std::stof(commandTokens[2]);
+			double learningRate = std::stod(commandTokens[2]);
 			int miniBatchSize = std::stoi(commandTokens[3]);
 
 			// Training
-			float totalTimeTaken = 0.0f;
-			std::cout << "Training Started - " << epochs << " Epochs, Learning Rate: " << learningRate << ", Mini-Batch Size: " << miniBatchSize << '\n';
-			for (int i = 0; i < epochs; i++) {
-				std::cout << "Epoch: " << i;
-				
-				auto startTime = std::chrono::high_resolution_clock::now();
-				nn.Learn(train_dataset, learningRate, miniBatchSize);
-				auto endTime = std::chrono::high_resolution_clock::now();
-				auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
-
-				std::cout << " - " << (dt.count() * 0.001f) << "s\n";
-				totalTimeTaken += dt.count() * 0.001f;
-			}
-			std::cout << "Training Completed in " << totalTimeTaken << "s\n";
+			nn.SGD(&train_dataset, epochs, learningRate, miniBatchSize);
 		}
 		if (commandTokens[0] == "test") {
 			// Output
