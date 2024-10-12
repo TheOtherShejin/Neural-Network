@@ -103,3 +103,50 @@ NeuralNetwork LoadModelFromCSV(std::string path) {
 	file.close();
 	return nn;
 }
+
+void SaveModelToJS(std::string path, NeuralNetwork* nn) {
+	std::ofstream file;
+	file.open(path);
+
+	// Write Number of Layers
+	file << "var model = {\n	'config': [";
+	file << nn->GetInputSize() << ',';
+	for (int i = 0; i < nn->layers.size(); i++) {
+		file << nn->layers[i].numOfNodes << ',';
+	}
+	file << "],\n";
+
+	// Write Activation Functions
+	file << "	'activationFunctions': [";
+	file << AF::GetFunctionEnum(nn->layers[0].activationFunction) << ',';
+	file << AF::GetFunctionEnum(nn->layers[nn->layers.size() - 1].activationFunction) << "],\n";
+
+	// Write Weights of Each Layer
+	file << "	'weights': [";
+	for (auto& layer : nn->layers) {
+		file << "[";
+		for (int i = 0; i < layer.numOfNodes; i++) {
+			file << "[";
+			for (int j = 0; j < layer.numOfIncomingNodes; j++) {
+				file << layer.weights(i, j) << ',';
+			}
+			file << "],";
+		}
+		file << "],";
+	}
+	file << "],\n";
+
+	// Write Biases of Each Layer
+	file << "	'biases': [";
+	for (auto& layer : nn->layers) {
+		file << "[";
+		for (int i = 0; i < layer.numOfNodes; i++) {
+			file << layer.biases(i) << ',';
+		}
+		file << "],";
+	}
+	file << "]\n}";
+
+	file.close();
+	std::cout << "Model successfully saved at " << path << '\n';
+}

@@ -8,3 +8,4 @@
 
 void SaveModelToCSV(std::string path, NeuralNetwork* nn);
 NeuralNetwork LoadModelFromCSV(std::string path);
+void SaveModelToJS(std::string path, NeuralNetwork* nn);
