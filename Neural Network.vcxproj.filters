@@ -48,6 +48,15 @@
     <ClCompile Include="src\Examples\MNIST_Processor.cpp">
       <Filter>Source Files\Examples</Filter>
     </ClCompile>
+    <ClCompile Include="src\NeuralNetwork\Vector.cpp">
+      <Filter>Source Files\Neural Network</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NeuralNetwork\Matrix.cpp">
+      <Filter>Source Files\Neural Network</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Examples\Digit_Classifier.cpp">
+      <Filter>Source Files\Examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\NeuralNetwork\NeuralNetwork.h">
@@ -66,6 +75,15 @@
       <Filter>Header Files\Examples</Filter>
     </ClInclude>
     <ClInclude Include="src\Examples\MNIST_Processor.h">
+      <Filter>Header Files\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NeuralNetwork\Vector.h">
+      <Filter>Header Files\Neural Network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NeuralNetwork\Matrix.h">
+      <Filter>Header Files\Neural Network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Examples\Digit_Classifier.h">
       <Filter>Header Files\Examples</Filter>
     </ClInclude>
   </ItemGroup>

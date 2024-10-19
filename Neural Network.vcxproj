@@ -136,21 +136,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Examples\Digit_Classifier.cpp" />
     <ClCompile Include="src\Examples\MNIST_Processor.cpp" />
     <ClCompile Include="src\Examples\XOR_Problem.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\NeuralNetwork\ActivationFunction.cpp" />
     <ClCompile Include="src\NeuralNetwork\Layer.cpp" />
+    <ClCompile Include="src\NeuralNetwork\Matrix.cpp" />
     <ClCompile Include="src\NeuralNetwork\ModelExporter.cpp" />
     <ClCompile Include="src\NeuralNetwork\NeuralNetwork.cpp" />
+    <ClCompile Include="src\NeuralNetwork\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Examples\Digit_Classifier.h" />
     <ClInclude Include="src\Examples\MNIST_Processor.h" />
     <ClInclude Include="src\Examples\XOR_Problem.h" />
     <ClInclude Include="src\NeuralNetwork\ActivationFunction.h" />
     <ClInclude Include="src\NeuralNetwork\Layer.h" />
+    <ClInclude Include="src\NeuralNetwork\Matrix.h" />
     <ClInclude Include="src\NeuralNetwork\ModelExporter.h" />
     <ClInclude Include="src\NeuralNetwork\NeuralNetwork.h" />
+    <ClInclude Include="src\NeuralNetwork\Vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
