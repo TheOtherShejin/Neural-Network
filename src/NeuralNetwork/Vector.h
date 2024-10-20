@@ -9,6 +9,7 @@ private:
 public:
 	int size;
 
+	Vector();
 	Vector(int size);
 	Vector(std::vector<double> elements);
 
@@ -16,5 +17,6 @@ public:
 
 	double Dot(Vector& other);
 	double Magnitude();
+	void SetZero();
 	void Print();
 };

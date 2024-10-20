@@ -1,9 +1,9 @@
 #include "Vector.h"
 
+Vector::Vector() : size(0) {}
 Vector::Vector(int size) : size(size) {
 	elements = std::vector<double>(size, 0);
 }
-
 Vector::Vector(std::vector<double> elements) 
 	: elements(elements), size(elements.size()) {}
 
@@ -29,6 +29,9 @@ double Vector::Magnitude() {
 		magnitude += element * element;
 	}
 	return sqrt(magnitude);
+}
+void Vector::SetZero() {
+	std::fill(elements.begin(), elements.end(), 0);
 }
 void Vector::Print() {
 	std::cout << '(';

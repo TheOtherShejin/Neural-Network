@@ -9,10 +9,12 @@ private:
 public:
 	int rows, cols;
 
+	Matrix();
 	Matrix(int rows, int cols);
 	Matrix(std::vector<std::vector<double>> elements);
 
 	double& operator()(int row, int col);
 
+	void SetZero();
 	void Print();
 };

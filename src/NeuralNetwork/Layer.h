@@ -4,34 +4,37 @@
 #include <math.h>
 #include <vector>
 #include "ActivationFunction.h"
+#include "Vector.h"
+#include "Matrix.h"
 #include <iostream>
-#include <Eigen/Eigen>
 
 class Layer {
 public:
 	double (*activationFunction)(double) = nullptr;
-	Eigen::VectorXd weightedInputs;
-	Eigen::VectorXd rawInputs;
+	Vector weightedInputs;
+	Vector rawInputs;
 
 	int numOfNodes, numOfIncomingNodes;
 
-	Eigen::MatrixXd weights;
-	Eigen::MatrixXd weightCostGradients;
-	Eigen::VectorXd biases;
-	Eigen::VectorXd biasCostGradients;
+	Matrix weights;
+	Matrix weightCostGradients;
+	Vector biases;
+	Vector biasCostGradients;
 
 	Layer(int numOfNodes, int numOfIncomingNodes, double (*activationFunction)(double));
 	void RandomizeParameters();
-	Eigen::VectorXd FeedForward(Eigen::VectorXd input);
+	Vector FeedForward(Vector input);
 
 	void ApplyGradients(double learningRate, int miniBatchSize);
-	void UpdateGradients(Eigen::VectorXd nodeValues);
+	void UpdateGradients(Vector nodeValues);
 	void ClearGradients();
 
-	Eigen::VectorXd CostDerivative(Eigen::VectorXd actualOutput, Eigen::VectorXd expectedOutput);
-	Eigen::VectorXd CalculateOutputLayerErrors(Eigen::VectorXd actualOutput, Eigen::VectorXd expectedOutput);
-	Eigen::VectorXd CalculateHiddenLayerErrors(Layer& nextLayer, Eigen::VectorXd nextLayerErrors);
+	Vector CostDerivative(Vector actualOutput, Vector expectedOutput);
+	Vector CalculateOutputLayerErrors(Vector actualOutput, Vector expectedOutput);
+	Vector CalculateHiddenLayerErrors(Layer& nextLayer, Vector nextLayerErrors);
 };
 
-Eigen::VectorXd Sigmoid(Eigen::VectorXd input);
-Eigen::VectorXd SigmoidDerivative(Eigen::VectorXd input);
+Vector Sigmoid(Vector input);
+double Sigmoid(double input);
+Vector SigmoidDerivative(Vector input);
+double SigmoidDerivative(double input);

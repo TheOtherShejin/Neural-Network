@@ -3,10 +3,10 @@
 Layer::Layer(int numOfNodes, int numOfIncomingNodes, double (*activationFunction)(double))
 	: numOfNodes(numOfNodes), numOfIncomingNodes(numOfIncomingNodes), activationFunction(activationFunction) {
 
-	weights = Eigen::MatrixXd(numOfNodes, numOfIncomingNodes);
-	weightCostGradients = Eigen::MatrixXd::Zero(numOfNodes, numOfIncomingNodes);
-	biases = Eigen::VectorXd(numOfNodes);
-	biasCostGradients = Eigen::VectorXd::Zero(numOfNodes);
+	weights = Matrix(numOfNodes, numOfIncomingNodes);
+	weightCostGradients = weights;
+	biases = Vector(numOfNodes);
+	biasCostGradients = biases;
 	RandomizeParameters();
 }
 
@@ -20,67 +20,115 @@ void Layer::RandomizeParameters() {
 	}
 }
 
-Eigen::VectorXd Layer::FeedForward(Eigen::VectorXd input) {
-	Eigen::VectorXd output = weights * input + biases;
+Vector Layer::FeedForward(Vector input) {
+	/*Vector output = weights * input + biases;
 	weightedInputs = output;
 	rawInputs = input;
-	output = Sigmoid(output);
+	output = Sigmoid(output);*/
+
+	Vector output(input.size);
+	rawInputs = input;
+
+	for (int i = 0; i < numOfNodes; i++) {
+		output(i) = biases(i);
+		for (int j = 0; j < numOfIncomingNodes; j++) {
+			output(i) += weights(i, j) * input(j);
+		}
+		weightedInputs(i) = output(i);
+		output(i) = Sigmoid(output(i));
+	}
 
 	return output;
 }
 
 void Layer::ApplyGradients(double learningRate, int miniBatchSize) {
-	weights -= weightCostGradients * (learningRate / miniBatchSize);
-	biases -= biasCostGradients * (learningRate / miniBatchSize);
+	double ratio = learningRate / miniBatchSize;
+	for (int i = 0; i < numOfNodes; i++) {
+		for (int j = 0; j < numOfIncomingNodes; j++) {
+			weights(i, j) -= weightCostGradients(i, j) * ratio;
+		}
+		biases(i) -= biasCostGradients(i) * ratio;
+	}
+
+	/*weights -= weightCostGradients * (learningRate / miniBatchSize);
+	biases -= biasCostGradients * (learningRate / miniBatchSize);*/
 }
 
-void Layer::UpdateGradients(Eigen::VectorXd errors) {
+void Layer::UpdateGradients(Vector errors) {
 	for (int i = 0; i < numOfNodes; i++) {
 		for (int j = 0; j < numOfIncomingNodes; j++) {
 			weightCostGradients(i, j) += rawInputs(j) * errors(i);
 		}
+		biasCostGradients(i) += errors(i);
 	}
 	//weightCostGradients += errors * rawInputs.transpose();
-	biasCostGradients += errors;
+	//biasCostGradients += errors;
 }
 
 void Layer::ClearGradients() {
-	weightCostGradients.setZero();
-	biasCostGradients.setZero();
+	weightCostGradients.SetZero();
+	biasCostGradients.SetZero();
 }
 
-Eigen::VectorXd Layer::CalculateOutputLayerErrors(Eigen::VectorXd actualOutput, Eigen::VectorXd expectedOutput) {
-	Eigen::VectorXd errors = CostDerivative(actualOutput, expectedOutput);
+Vector Layer::CalculateOutputLayerErrors(Vector actualOutput, Vector expectedOutput) {
+	/*Vector errors = CostDerivative(actualOutput, expectedOutput);
 	errors = errors.cwiseProduct(SigmoidDerivative(weightedInputs));
+	return errors;*/
+	Vector errors = CostDerivative(actualOutput, expectedOutput);
+	for (int i = 0; i < numOfNodes; i++) {
+		errors(i) *= SigmoidDerivative(weightedInputs(i));
+	}
 	return errors;
 }
 
-Eigen::VectorXd Layer::CalculateHiddenLayerErrors(Layer& nextLayer, Eigen::VectorXd nextLayerErrors) {
-	Eigen::VectorXd errors = nextLayer.weights.transpose() * nextLayerErrors;
-	errors = errors.cwiseProduct(SigmoidDerivative(weightedInputs));
+Vector Layer::CalculateHiddenLayerErrors(Layer& nextLayer, Vector nextLayerErrors) {
+	/*Vector errors = nextLayer.weights.transpose() * nextLayerErrors;
+	errors = errors.cwiseProduct(SigmoidDerivative(weightedInputs));*/
+	Vector errors(numOfNodes);
+	for (int i = 0; i < nextLayer.numOfIncomingNodes; i++) {
+		for (int j = 0; j < nextLayer.numOfNodes; j++) {
+			errors(i) = nextLayer.weights(j, i) * nextLayerErrors(i) * SigmoidDerivative(weightedInputs(i));
+		}
+	}
 
 	return errors;
 }
 
-Eigen::VectorXd Layer::CostDerivative(Eigen::VectorXd actualOutput, Eigen::VectorXd expectedOutput) {
-	return actualOutput - expectedOutput;
+Vector Layer::CostDerivative(Vector actualOutput, Vector expectedOutput) {
+	Vector output(actualOutput.size);
+	for (int i = 0; i < actualOutput.size; i++) {
+		output(i) = actualOutput(i) - expectedOutput(i);
+	}
+	return output;
+
+	//return actualOutput - expectedOutput;
 }
 
-Eigen::VectorXd Sigmoid(Eigen::VectorXd input) {
-	Eigen::VectorXd output = input;
-	for (int i = 0; i < input.size(); i++) {
+Vector Sigmoid(Vector input) {
+	Vector output = input;
+	for (int i = 0; i < input.size; i++) {
 		output(i) = 1.0f / (1.0f + exp(-input(i)));
 	}
 	return output;
 }
 
-Eigen::VectorXd SigmoidDerivative(Eigen::VectorXd input) {
-	Eigen::VectorXd value = Sigmoid(input);
-	Eigen::VectorXd output(input.size());
+Vector SigmoidDerivative(Vector input) {
+	Vector value = Sigmoid(input);
+	Vector output(input.size);
 
-	for (int i = 0; i < output.size(); i++) {
+	for (int i = 0; i < output.size; i++) {
 		output(i) = value(i) * (1 - value(i));
 	}
 
 	return output;
+}
+
+
+double Sigmoid(double input) {
+	return 1.0f / (1.0f + exp(-input));
+}
+
+double SigmoidDerivative(double input) {
+	double value = Sigmoid(input);
+	return value * (1 - value);
 }

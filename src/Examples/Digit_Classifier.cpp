@@ -33,7 +33,7 @@ void Digit_Classifier() {
 		if (commandTokens[0] == "test") {
 			// Output
 			std::cout << "Testing...\n";
-			Eigen::VectorXd output(10);
+			Vector output(10);
 			double cost = 0.0f;
 			int correctPredictions = 0;
 			for (int i = 0; i < test_dataset.size(); i++) {
@@ -41,15 +41,15 @@ void Digit_Classifier() {
 				cost += nn.Cost(output, test_dataset[i].expectedOutput);
 
 				int prediction = 0;
-				double bestConfidence = output[0];
+				double bestConfidence = output(0);
 				for (int i = 0; i < 10; i++) {
-					if (output[i] > bestConfidence) {
-						bestConfidence = output[i];
+					if (output(i) > bestConfidence) {
+						bestConfidence = output(i);
 						prediction = i;
 					}
 				}
 
-				if (test_dataset[i].expectedOutput[prediction] == 1) correctPredictions++;
+				if (test_dataset[i].expectedOutput(prediction) == 1) correctPredictions++;
 			}
 			cost /= test_dataset.size();
 			std::cout << "Test Completed - Accuracy: " << correctPredictions << " / 10000 (" << (correctPredictions / 100.0f) << "%) - Cost: " << cost << '\n';

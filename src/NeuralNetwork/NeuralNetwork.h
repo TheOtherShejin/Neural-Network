@@ -7,10 +7,13 @@
 #include <chrono>
 #include <algorithm>
 #include <random>
+#include "Vector.h"
+#include "Matrix.h"
 
 struct DataPoint {
-	Eigen::VectorXd input, expectedOutput;
-	DataPoint(Eigen::VectorXd input, Eigen::VectorXd expectedOutput)
+	Vector input, expectedOutput;
+
+	DataPoint(Vector input, Vector expectedOutput)
 		: input(input), expectedOutput(expectedOutput) {}
 };
 
@@ -19,7 +22,7 @@ private:
 	void ApplyAllGradients(double learningRate, int miniBatchSize);
 	void ClearAllGradients();
 
-	void BackPropagate(DataPoint* dataPoint, Eigen::VectorXd* actualOutput);
+	void BackPropagate(DataPoint* dataPoint, Vector* actualOutput);
 	int inputSize;
 public:
 	std::vector<Layer> layers;
@@ -27,10 +30,10 @@ public:
 	NeuralNetwork(std::vector<int> numberOfNeurons, double (*hiddenLayerAF)(double), double (*outputLayerAF)(double));
 	void RandomizeAllParameters();
 
-	Eigen::VectorXd Evaluate(Eigen::VectorXd input);
+	Vector Evaluate(Vector input);
 	void Learn(std::vector<DataPoint> dataset, double learningRate, int miniBatchSize);
 	void SGD(std::vector<DataPoint>* dataset, int epochs, double learningRate, int miniBatchSize);
-	double Cost(Eigen::VectorXd actualOutput, Eigen::VectorXd expectedOutput);
+	double Cost(Vector actualOutput, Vector expectedOutput);
 
 	int GetInputSize() const;
 	void SetActivationFunctions(double (*hiddenLayerAF)(double), double (*outputLayerAF)(double));
