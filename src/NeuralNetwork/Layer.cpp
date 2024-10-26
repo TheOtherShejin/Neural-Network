@@ -88,6 +88,13 @@ Vector Layer::CalculateHiddenLayerErrors(Layer& nextLayer, Vector nextLayerError
 }
 
 Vector Layer::CostDerivative(Vector actualOutput, Vector expectedOutput) {
+	Vector output(actualOutput.size);
+	for (int i = 0; i < actualOutput.size; i++) {
+		output(i) = actualOutput(i) - expectedOutput(i);
+	}
+	return output;
+
+Vector Layer::CostDerivative(Vector actualOutput, Vector expectedOutput) {
 	return actualOutput - expectedOutput;
 }
 

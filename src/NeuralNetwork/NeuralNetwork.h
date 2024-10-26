@@ -7,6 +7,8 @@
 #include <chrono>
 #include <algorithm>
 #include <random>
+#include "Vector.h"
+#include "Matrix.h"
 
 struct DataPoint {
 	Vector input, expectedOutput;
