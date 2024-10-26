@@ -5,6 +5,7 @@ Layer::Layer(int numOfNodes, int numOfIncomingNodes, double (*activationFunction
 
 	weights = Matrix(numOfNodes, numOfIncomingNodes);
 	weightCostGradients = weights;
+	weightedInputs = Vector(numOfNodes);
 	biases = Vector(numOfNodes);
 	biasCostGradients = biases;
 	RandomizeParameters();
