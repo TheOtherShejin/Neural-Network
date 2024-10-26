@@ -14,22 +14,27 @@ void NeuralNetwork::RandomizeAllParameters() {
 	}
 }
 
-Eigen::VectorXd NeuralNetwork::Evaluate(Eigen::VectorXd input) {
+Vector NeuralNetwork::Evaluate(Vector input) {
 	for (int i = 0; i < layers.size(); i++) {
 		input = layers[i].FeedForward(input);
 	}
 	return input;
 }
 
-double NeuralNetwork::Cost(Eigen::VectorXd actualOutput, Eigen::VectorXd expectedOutput) {
-	return (actualOutput - expectedOutput).squaredNorm() * 0.5;
+double NeuralNetwork::Cost(Vector actualOutput, Vector expectedOutput) {
+	//return (actualOutput - expectedOutput).squaredNorm() * 0.5;
+	Vector output(actualOutput.size);
+	for (int i = 0; i < output.size; i++) {
+		output(i) = actualOutput(i) - expectedOutput(i);
+	}
+	return output.Dot(output) * 0.5; 
 }
 
-void NeuralNetwork::BackPropagate(DataPoint* dataPoint, Eigen::VectorXd* actualOutput) {
+void NeuralNetwork::BackPropagate(DataPoint* dataPoint, Vector* actualOutput) {
 	Layer& outputLayer = layers[layers.size() - 1];
 
 	// Error
-	Eigen::VectorXd errors = outputLayer.CalculateOutputLayerErrors(*actualOutput, dataPoint->expectedOutput);
+	Vector errors = outputLayer.CalculateOutputLayerErrors(*actualOutput, dataPoint->expectedOutput);
 	outputLayer.UpdateGradients(errors);
 
 	for (int i = layers.size() - 2; i >= 0; i--) {
@@ -63,7 +68,7 @@ void NeuralNetwork::Learn(std::vector<DataPoint> dataset, double learningRate, i
 		for (int j = 0; j < miniBatchSize; j++) {
 			int index = j + i * miniBatchSize;
 			// Feedforward
-			Eigen::VectorXd actualOutput = Evaluate(dataset[index].input);
+			Vector actualOutput = Evaluate(dataset[index].input);
 
 			BackPropagate(&dataset[index], &actualOutput);
 		}

@@ -36,10 +36,10 @@ void XOR_Problem() {
 			float learningRate = std::stof(commandTokens[2]);
 
 			std::vector<DataPoint> dataPoints = {
-				{ Eigen::VectorXd{{0, 0}}, Eigen::VectorXd{{0}} },
-				{ Eigen::VectorXd{{0, 1}}, Eigen::VectorXd{{1}} },
-				{ Eigen::VectorXd{{1, 0}}, Eigen::VectorXd{{1}} },
-				{ Eigen::VectorXd{{1, 1}}, Eigen::VectorXd{{0}} }
+				{ Vector{{0, 0}}, Vector{{0}} },
+				{ Vector{{0, 1}}, Vector{{1}} },
+				{ Vector{{1, 0}}, Vector{{1}} },
+				{ Vector{{1, 1}}, Vector{{0}} }
 			};
 
 			// Training
@@ -49,13 +49,13 @@ void XOR_Problem() {
 				nn.Learn(dataPoints, learningRate, 4);
 
 				if (i % (int)round(epochs / 10.0f) == 0) {
-					Eigen::VectorXd output;
+					Vector output;
 					double avgCost = 0.0f;
 					for (int j = 0; j < 4; j++) {
 						int a = j & 1;
 						int b = (j & 2) >> 1;
-						output = nn.Evaluate(Eigen::VectorXd{ { (double)a, (double)b } });
-						avgCost += nn.Cost(output, Eigen::VectorXd{ { (double)(a ^ b) } });
+						output = nn.Evaluate(Vector{ { (double)a, (double)b } });
+						avgCost += nn.Cost(output, Vector{ { (a ^ b) } });
 					}
 					avgCost /= 4;
 					std::cout << "Epoch: " << i << ", Average Cost: " << avgCost << '\n';
@@ -67,15 +67,15 @@ void XOR_Problem() {
 		}
 		if (commandTokens[0] == "test") {
 			// Output
-			Eigen::VectorXd output;
+			Vector output;
 			double avgCost = 0.0f;
 			std::cout << "XOR Problem Example:\n";
 			for (int i = 0; i < 4; i++) {
 				int a = i & 1;
 				int b = (i & 2) >> 1;
-				output = nn.Evaluate(Eigen::VectorXd{ { (double)a, (double)b } });
-				avgCost += nn.Cost(output, Eigen::VectorXd{ { (double)(a ^ b) } });
-				std::cout << (output[0] > 0.5f ? 1 : 0) << ' ' << output[0] << '\n';
+				output = nn.Evaluate(Vector{ { (double)a, (double)b } });
+				avgCost += nn.Cost(output, Vector{ { (a ^ b) } });
+				std::cout << (output(0) > 0.5f ? 1 : 0) << ' ' << output(0) << '\n';
 			}
 			avgCost /= 4;
 			std::cout << "Average Cost: " << avgCost << "\n\n";

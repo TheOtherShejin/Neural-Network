@@ -37,9 +37,9 @@ std::vector<DataPoint> LoadIntoDataset(std::string path) {
 	}
 
 	std::string line, substring;
-	Eigen::VectorXd input(784);
-	input.setZero();
-	Eigen::VectorXd expectedOutput{ {0, 0, 0, 0, 0, 0, 0, 0, 0, 0} };
+	Vector input(784);
+	input.SetZero();
+	Vector expectedOutput{ {0, 0, 0, 0, 0, 0, 0, 0, 0, 0} };
 	std::stringstream ss(line);
 	while (std::getline(file, line)) {
 		ss = std::stringstream(line);

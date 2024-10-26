@@ -2,4 +2,6 @@
 
 int main() {
 	Digit_Classifier();
+
+	return 0;
 }
