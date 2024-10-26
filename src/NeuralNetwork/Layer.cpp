@@ -29,7 +29,7 @@ Vector Layer::FeedForward(Vector input) {
 
 	Vector output(numOfNodes);
 	rawInputs = input;
-	weightedInputs = input;
+	weightedInputs = Vector(numOfNodes);
 	for (int i = 0; i < numOfNodes; i++) {
 		weightedInputs(i) = biases(i);
 		for (int j = 0; j < numOfIncomingNodes; j++) {
@@ -87,12 +87,13 @@ Vector Layer::CalculateHiddenLayerErrors(Layer& nextLayer, Vector nextLayerError
 	return errors;
 }
 
-Vector Layer::CostDerivative(Vector actualOutput, Vector expectedOutput) {
+/*Vector Layer::CostDerivative(Vector actualOutput, Vector expectedOutput) {
 	Vector output(actualOutput.size);
 	for (int i = 0; i < actualOutput.size; i++) {
 		output(i) = actualOutput(i) - expectedOutput(i);
 	}
 	return output;
+}*/
 
 Vector Layer::CostDerivative(Vector actualOutput, Vector expectedOutput) {
 	return actualOutput - expectedOutput;
