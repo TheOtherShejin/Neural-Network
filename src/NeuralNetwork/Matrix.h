@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Vector.h"
 #include <vector>
 #include <iostream>
 
@@ -18,12 +19,15 @@ public:
 	Matrix operator+(Matrix other);
 	Matrix operator-(Matrix other);
 	Matrix operator*(double other);
+	Vector operator*(Vector other);
 
 	void operator+=(Matrix other);
 	void operator-=(Matrix other);
 	void operator*=(double other);
+
 	double& operator()(int row, int col);
 
+	Matrix Transpose();
 	void SetZero();
 	void Print();
 };

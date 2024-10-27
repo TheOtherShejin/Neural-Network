@@ -21,13 +21,13 @@ void Layer::RandomizeParameters() {
 }
 
 Vector Layer::FeedForward(Vector input) {
-	/*Vector output = weights * input + biases;
+	Vector output = weights * input + biases;
 	weightedInputs = output;
 	rawInputs = input;
 	output = Sigmoid(output);
-	return output;*/
+	return output;
 
-	Vector output(numOfNodes);
+	/*Vector output(numOfNodes);
 	rawInputs = input;
 	weightedInputs = Vector(numOfNodes);
 	for (int i = 0; i < numOfNodes; i++) {
@@ -37,8 +37,7 @@ Vector Layer::FeedForward(Vector input) {
 		}
 		output(i) = Sigmoid(weightedInputs(i));
 	}
-
-	return output;
+	return output;*/
 }
 
 void Layer::ApplyGradients(double learningRate, int miniBatchSize) {
@@ -64,36 +63,21 @@ void Layer::ClearGradients() {
 
 Vector Layer::CalculateOutputLayerErrors(Vector actualOutput, Vector expectedOutput) {
 	return CostDerivative(actualOutput, expectedOutput) * SigmoidDerivative(weightedInputs);
-
-	/*Vector errors = CostDerivative(actualOutput, expectedOutput);
-	for (int i = 0; i < errors.size; i++) {
-		errors(i) *= SigmoidDerivative(weightedInputs(i));
-	}
-	return errors;*/
 }
 
 Vector Layer::CalculateHiddenLayerErrors(Layer& nextLayer, Vector nextLayerErrors) {
-	/*Vector errors = nextLayer.weights.transpose() * nextLayerErrors;
-	errors = errors.cwiseProduct(SigmoidDerivative(weightedInputs));
-	return errors;*/
+	Vector errors = nextLayer.weights.Transpose() * nextLayerErrors;
+	return errors * SigmoidDerivative(weightedInputs);
 	
-	Vector errors(numOfNodes);
+	/*Vector errors(numOfNodes);
 	for (int i = 0; i < numOfNodes; i++) {
 		for (int j = 0; j < nextLayer.numOfNodes; j++) {
 			errors(i) += nextLayerErrors(j) * nextLayer.weights(j, i);
 		}
 		errors(i) *= SigmoidDerivative(weightedInputs(i));
 	}
-	return errors;
+	return errors;*/
 }
-
-/*Vector Layer::CostDerivative(Vector actualOutput, Vector expectedOutput) {
-	Vector output(actualOutput.size);
-	for (int i = 0; i < actualOutput.size; i++) {
-		output(i) = actualOutput(i) - expectedOutput(i);
-	}
-	return output;
-}*/
 
 Vector Layer::CostDerivative(Vector actualOutput, Vector expectedOutput) {
 	return actualOutput - expectedOutput;
@@ -114,7 +98,6 @@ Vector SigmoidDerivative(Vector input) {
 	for (int i = 0; i < output.size; i++) {
 		output(i) = value(i) * (1 - value(i));
 	}
-
 	return output;
 }
 

@@ -24,6 +24,15 @@ Matrix Matrix::operator*(double other) {
 	mat *= other;
 	return mat;
 }
+Vector Matrix::operator*(Vector other) {
+	Vector vec(rows);
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			vec(i) += other(j) * (*this)(i, j);
+		}
+	}
+	return vec;
+}
 
 void Matrix::operator+=(Matrix other) {
 	if (CheckForErrors(other.rows, other.cols)) return;
@@ -53,10 +62,20 @@ void Matrix::operator*=(double other) {
 		}
 	}
 }
+
 double& Matrix::operator()(int row, int col) {
 	return elements[row][col];
 }
 
+Matrix Matrix::Transpose() {
+	Matrix mat(cols, rows);
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			mat(j, i) = (*this)(i, j);
+		}
+	}
+	return mat;
+}
 void Matrix::SetZero() {
 	for (auto& row : elements) {
 		std::fill(row.begin(), row.end(), 0);

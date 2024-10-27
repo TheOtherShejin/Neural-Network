@@ -24,6 +24,7 @@ public:
 	void operator-=(Vector other);
 	void operator*=(Vector other); // Hadamard Product
 	void operator*=(double other);
+
 	double& operator()(int i);
 
 	double Dot(Vector other);

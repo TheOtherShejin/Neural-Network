@@ -54,6 +54,7 @@ void Vector::operator*=(double other) {
 		elements[i] *= other;
 	}
 }
+
 double& Vector::operator()(int i) {
 	return elements[i];
 }
