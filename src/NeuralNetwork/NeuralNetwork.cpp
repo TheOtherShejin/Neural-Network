@@ -1,11 +1,11 @@
 #include "NeuralNetwork.h"
 
-NeuralNetwork::NeuralNetwork(std::vector<int> numberOfNeurons, double (*hiddenLayerAF)(double), double (*outputLayerAF)(double)) {
+NeuralNetwork::NeuralNetwork(std::vector<int> numberOfNeurons, Vector (*hiddenLayerAF)(Vector), Vector(*outputLayerAF)(Vector)) {
 	inputSize = numberOfNeurons[0];
 	for (int i = 1; i < numberOfNeurons.size(); i++) {
 		layers.push_back(Layer(numberOfNeurons[i], numberOfNeurons[i-1], hiddenLayerAF));
 	}
-	layers[layers.size()-1].activationFunction = outputLayerAF;
+	layers[layers.size()-1].SetActivationFunction(outputLayerAF);
 }
 
 void NeuralNetwork::RandomizeAllParameters() {
@@ -95,9 +95,9 @@ int NeuralNetwork::GetInputSize() const {
 	return inputSize;
 }
 
-void NeuralNetwork::SetActivationFunctions(double (*hiddenLayerAF)(double), double (*outputLayerAF)(double)) {
+void NeuralNetwork::SetActivationFunctions(Vector (*hiddenLayerAF)(Vector), Vector (*outputLayerAF)(Vector)) {
 	for (auto& layer : layers) {
-		layer.activationFunction = hiddenLayerAF;
+		layer.SetActivationFunction(hiddenLayerAF);
 	}
-	layers[layers.size() - 1].activationFunction = outputLayerAF;
+	layers[layers.size() - 1].SetActivationFunction(outputLayerAF);
 }

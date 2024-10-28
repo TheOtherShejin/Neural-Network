@@ -1,7 +1,9 @@
 #include "Layer.h"
 
-Layer::Layer(int numOfNodes, int numOfIncomingNodes, double (*activationFunction)(double))
-	: numOfNodes(numOfNodes), numOfIncomingNodes(numOfIncomingNodes), activationFunction(activationFunction) {
+Layer::Layer(int numOfNodes, int numOfIncomingNodes, Vector (*ActivationFunction)(Vector))
+	: numOfNodes(numOfNodes), numOfIncomingNodes(numOfIncomingNodes), ActivationFunction(ActivationFunction) {
+
+	ActivationDerivative = AF::GetDerivativeFromEnum(AF::GetFunctionEnum(ActivationFunction));
 
 	weights = Matrix(numOfNodes, numOfIncomingNodes);
 	weightCostGradients = weights;
@@ -24,7 +26,7 @@ Vector Layer::FeedForward(Vector input) {
 	Vector output = weights * input + biases;
 	weightedInputs = output;
 	rawInputs = input;
-	output = Sigmoid(output);
+	output = ActivationFunction(output);
 	return output;
 
 	/*Vector output(numOfNodes);
@@ -38,6 +40,11 @@ Vector Layer::FeedForward(Vector input) {
 		output(i) = Sigmoid(weightedInputs(i));
 	}
 	return output;*/
+}
+
+void Layer::SetActivationFunction(Vector (*ActivationFunction)(Vector)) {
+	this->ActivationFunction = ActivationFunction;
+	this->ActivationDerivative = AF::GetDerivativeFromEnum(AF::GetFunctionEnum(ActivationFunction));
 }
 
 void Layer::ApplyGradients(double learningRate, int miniBatchSize) {
@@ -62,12 +69,12 @@ void Layer::ClearGradients() {
 }
 
 Vector Layer::CalculateOutputLayerErrors(Vector actualOutput, Vector expectedOutput) {
-	return CostDerivative(actualOutput, expectedOutput) * SigmoidDerivative(weightedInputs);
+	return CostDerivative(actualOutput, expectedOutput) * ActivationDerivative(weightedInputs);
 }
 
 Vector Layer::CalculateHiddenLayerErrors(Layer& nextLayer, Vector nextLayerErrors) {
 	Vector errors = nextLayer.weights.Transpose() * nextLayerErrors;
-	return errors * SigmoidDerivative(weightedInputs);
+	return errors * ActivationDerivative(weightedInputs);
 	
 	/*Vector errors(numOfNodes);
 	for (int i = 0; i < numOfNodes; i++) {
@@ -81,31 +88,4 @@ Vector Layer::CalculateHiddenLayerErrors(Layer& nextLayer, Vector nextLayerError
 
 Vector Layer::CostDerivative(Vector actualOutput, Vector expectedOutput) {
 	return actualOutput - expectedOutput;
-}
-
-Vector Sigmoid(Vector input) {
-	Vector output = input;
-	for (int i = 0; i < input.size; i++) {
-		output(i) = 1.0f / (1.0f + exp(-input(i)));
-	}
-	return output;
-}
-
-Vector SigmoidDerivative(Vector input) {
-	Vector value = Sigmoid(input);
-	Vector output(input.size);
-
-	for (int i = 0; i < output.size; i++) {
-		output(i) = value(i) * (1 - value(i));
-	}
-	return output;
-}
-
-double Sigmoid(double input) {
-	return 1.0f / (1.0f + exp(-input));
-}
-
-double SigmoidDerivative(double input) {
-	double value = Sigmoid(input);
-	return value * (1 - value);
 }

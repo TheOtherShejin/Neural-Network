@@ -10,7 +10,8 @@
 
 class Layer {
 public:
-	double (*activationFunction)(double) = nullptr;
+	Vector (*ActivationFunction)(Vector) = nullptr;
+	Vector (*ActivationDerivative)(Vector) = nullptr;
 	Vector weightedInputs;
 	Vector rawInputs;
 
@@ -21,9 +22,10 @@ public:
 	Vector biases;
 	Vector biasCostGradients;
 
-	Layer(int numOfNodes, int numOfIncomingNodes, double (*activationFunction)(double));
+	Layer(int numOfNodes, int numOfIncomingNodes, Vector (*ActivationFunction)(Vector));
 	void RandomizeParameters();
 	Vector FeedForward(Vector input);
+	void SetActivationFunction(Vector (*ActivationFunction)(Vector));
 
 	void ApplyGradients(double learningRate, int miniBatchSize);
 	void UpdateGradients(Vector nodeValues);
@@ -33,8 +35,3 @@ public:
 	Vector CalculateOutputLayerErrors(Vector actualOutput, Vector expectedOutput);
 	Vector CalculateHiddenLayerErrors(Layer& nextLayer, Vector nextLayerErrors);
 };
-
-Vector Sigmoid(Vector input);
-Vector SigmoidDerivative(Vector input);
-double Sigmoid(double input);
-double SigmoidDerivative(double input);

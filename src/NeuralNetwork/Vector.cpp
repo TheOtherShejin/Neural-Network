@@ -1,8 +1,8 @@
 #include "Vector.h"
 
 Vector::Vector() : size(0) {}
-Vector::Vector(int size) : size(size) {
-	elements = std::vector<double>(size, 0);
+Vector::Vector(int size, double fillWithElement) : size(size) {
+	elements = std::vector<double>(size, fillWithElement);
 }
 Vector::Vector(std::vector<double> elements) 
 	: elements(elements), size(elements.size()) {}
@@ -59,6 +59,13 @@ double& Vector::operator()(int i) {
 	return elements[i];
 }
 
+Vector Vector::ForEach(double (*iterativeFunc)(double)) {
+	Vector vec(size);
+	for (int i = 0; i < vec.size; i++) {
+		vec(i) = iterativeFunc((*this)(i));
+	}
+	return vec;
+}
 double Vector::Dot(Vector other) {
 	if (CheckForErrors(other.size)) return 0;
 

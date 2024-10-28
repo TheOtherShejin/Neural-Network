@@ -12,7 +12,7 @@ public:
 	int size;
 
 	Vector();
-	Vector(int size);
+	Vector(int size, double fillWithElement = 0);
 	Vector(std::vector<double> elements);
 
 	Vector operator+(Vector other);
@@ -27,6 +27,7 @@ public:
 
 	double& operator()(int i);
 
+	Vector ForEach(double (*iterativeFunc)(double));
 	double Dot(Vector other);
 	double Magnitude();
 	void SetZero();

@@ -12,8 +12,8 @@ void SaveModelToCSV(std::string path, NeuralNetwork* nn) {
 	file << '\n';
 
 	// Write Activation Functions
-	file << AF::GetFunctionEnum(nn->layers[0].activationFunction) << ',';
-	file << AF::GetFunctionEnum(nn->layers[nn->layers.size() - 1].activationFunction) << '\n';
+	file << AF::GetFunctionEnum(nn->layers[0].ActivationFunction) << ',';
+	file << AF::GetFunctionEnum(nn->layers[nn->layers.size() - 1].ActivationFunction) << '\n';
 
 	// Write Weights of Each Layer
 	for (auto& layer : nn->layers) {
@@ -42,7 +42,7 @@ NeuralNetwork LoadModelFromCSV(std::string path) {
 	file.open(path);
 
 	std::vector<int> numberOfNeurons;
-	double (*hiddenLayerAF)(double) = AF::Linear, (*outputLayerAF)(double) = AF::Linear;
+	Vector (*hiddenLayerAF)(Vector) = AF::Linear, (*outputLayerAF)(Vector) = AF::Linear;
 
 	// Load Number Of Layers
 	if (file.good()) {
@@ -118,8 +118,8 @@ void SaveModelToJS(std::string path, NeuralNetwork* nn) {
 
 	// Write Activation Functions
 	file << "	'activationFunctions': [";
-	file << AF::GetFunctionEnum(nn->layers[0].activationFunction) << ',';
-	file << AF::GetFunctionEnum(nn->layers[nn->layers.size() - 1].activationFunction) << "],\n";
+	file << AF::GetFunctionEnum(nn->layers[0].ActivationFunction) << ',';
+	file << AF::GetFunctionEnum(nn->layers[nn->layers.size() - 1].ActivationFunction) << "],\n";
 
 	// Write Weights of Each Layer
 	file << "	'weights': [";

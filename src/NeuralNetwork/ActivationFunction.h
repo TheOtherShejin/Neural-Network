@@ -2,8 +2,9 @@
 
 #include <math.h>
 #include <vector>
+#include "Vector.h"
 
-typedef double (*fptr)(double);
+typedef Vector (*fptr)(Vector);
 
 namespace ActivationFunctions {
 	enum FunctionType {
@@ -15,23 +16,24 @@ namespace ActivationFunctions {
 		TanHAF
 	};
 
-	double Linear(double input);
-	double BinaryStep(double input);
-	double ReLU(double input);
-	double LeakyReLU(double input);
-	double Sigmoid(double input);
-	double TanH(double input);
+	Vector Linear(Vector input);
+	Vector BinaryStep(Vector input);
+	Vector ReLU(Vector input);
+	Vector LeakyReLU(Vector input);
+	Vector Sigmoid(Vector input);
+	Vector TanH(Vector input);
 	//std::vector<double> Softmax(std::vector<double> input); WIP
 
-	FunctionType GetFunctionEnum(double (*activationFunction)(double));
+	FunctionType GetFunctionEnum(Vector (*activationFunction)(Vector));
 	fptr GetFunctionFromEnum(FunctionType funcType);
+	fptr GetDerivativeFromEnum(FunctionType funcType);
 
-	double DerivativeOf(double input, double (*activationFunction)(double));
-	double LinearDerivative(double input);
-	double BinaryStepDerivative(double input);
-	double ReLUDerivative(double input);
-	double LeakyReLUDerivative(double input);
-	double SigmoidDerivative(double input);
-	double TanHDerivative(double input);
+	Vector DerivativeOf(Vector input, Vector (*activationFunction)(Vector));
+	Vector LinearDerivative(Vector input);
+	Vector BinaryStepDerivative(Vector input);
+	Vector ReLUDerivative(Vector input);
+	Vector LeakyReLUDerivative(Vector input);
+	Vector SigmoidDerivative(Vector input);
+	Vector TanHDerivative(Vector input);
 }
 namespace AF = ActivationFunctions;

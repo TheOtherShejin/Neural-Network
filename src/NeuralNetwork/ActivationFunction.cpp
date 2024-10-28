@@ -1,28 +1,28 @@
 #include "ActivationFunction.h"
 
 namespace ActivationFunctions {
-	double Linear(double input) {
+	Vector Linear(Vector input) {
 		return input;
 	}
-	double BinaryStep(double input) {
-		return (input >= 0);
+	Vector BinaryStep(Vector input) {
+		return input.ForEach([](double element) -> double { return element >= 0; });
 	}
-	double ReLU(double input) {
-		return fmax(0, input);
+	Vector ReLU(Vector input) {
+		return input.ForEach([](double element) -> double { return fmax(0, element); });
 	}
-	double LeakyReLU(double input) {
-		return fmax(0.1f * input, input);
+	Vector LeakyReLU(Vector input) {
+		return input.ForEach([](double element) -> double { return fmax(0.1f * element, element); });
 	}
-	double Sigmoid(double input) {
-		return 1.0f / (1 + exp(-input));
+	Vector Sigmoid(Vector input) {
+		return input.ForEach([](double element) -> double { return 1.0f / (1.0f + exp(-element)); });
 	}
-	double TanH(double input) {
-		return tanh(input);
+	Vector TanH(Vector input) {
+		return input.ForEach([](double element) -> double { return tanh(element); });
 	}
 	// WIP
-	/*std::vector<double> Softmax(std::vector<double> input) {
-		std::vector<double> output;
-		double sum = 0;
+	/*std::vector<Vector> Softmax(std::vector<Vector> input) {
+		std::vector<Vector> output;
+		Vector sum = 0;
 		for (int i = 0; i < input.size(); i++) {
 			output[i] = exp(input[i]);
 			sum += output[i];
@@ -33,7 +33,7 @@ namespace ActivationFunctions {
 		return output;
 	}*/
 
-	FunctionType GetFunctionEnum(double (*activationFunction)(double)) {
+	FunctionType GetFunctionEnum(Vector (*activationFunction)(Vector)) {
 		if (activationFunction == Sigmoid)
 			return FunctionType::SigmoidAF;
 		else if (activationFunction == TanH)
@@ -69,8 +69,30 @@ namespace ActivationFunctions {
 			break;
 		}
 	}
+	fptr GetDerivativeFromEnum(FunctionType funcType) {
+		switch (funcType) {
+		case FunctionType::SigmoidAF:
+			return SigmoidDerivative;
+			break;
+		case FunctionType::TanHAF:
+			return TanHDerivative;
+			break;
+		case FunctionType::ReLUAF:
+			return ReLUDerivative;
+			break;
+		case FunctionType::LinearAF:
+			return LinearDerivative;
+			break;
+		case FunctionType::BinaryStepAF:
+			return BinaryStepDerivative;
+			break;
+		case FunctionType::LeakyReLUAF:
+			return LeakyReLUDerivative;
+			break;
+		}
+	}
 
-	double DerivativeOf(double input, double (*activationFunction)(double)) {
+	Vector DerivativeOf(Vector input, Vector (*activationFunction)(Vector)) {
 		switch (GetFunctionEnum(activationFunction)) {
 		case FunctionType::SigmoidAF:
 			return SigmoidDerivative(input);
@@ -92,24 +114,23 @@ namespace ActivationFunctions {
 			break;
 		}
 	}
-	double LinearDerivative(double input) {
-		return 1;
+	Vector LinearDerivative(Vector input) {
+		return Vector(input.size, 1);
 	}
-	double BinaryStepDerivative(double input) {
-		return 0;
+	Vector BinaryStepDerivative(Vector input) {
+		return Vector(input.size);
 	}
-	double ReLUDerivative(double input) {
-		return (input >= 0);
+	Vector ReLUDerivative(Vector input) {
+		return input.ForEach([](double element) -> double { return element >= 0; });
 	}
-	double LeakyReLUDerivative(double input) {
-		if (input >= 0) return 1;
-		else return 0.1f;
+	Vector LeakyReLUDerivative(Vector input) {
+		return input.ForEach([](double element) -> double { return (element >= 0) ? 1 : 0.1f; });
 	}
-	double SigmoidDerivative(double input) {
-		double value = Sigmoid(input);
-		return value * (1 - value);
+	Vector SigmoidDerivative(Vector input) {
+		Vector value = Sigmoid(input);
+		return value.ForEach([](double element) -> double { return element * (1 - element); });
 	}
-	double TanHDerivative(double input) {
-		return 1.0f / pow((cosh(input)), 2);
+	Vector TanHDerivative(Vector input) {
+		return input.ForEach([](double element) -> double { return 1.0f / pow(cosh(element), 2); });
 	}
 }

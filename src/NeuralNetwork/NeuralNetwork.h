@@ -26,7 +26,7 @@ private:
 public:
 	std::vector<Layer> layers;
 	
-	NeuralNetwork(std::vector<int> numberOfNeurons, double (*hiddenLayerAF)(double), double (*outputLayerAF)(double));
+	NeuralNetwork(std::vector<int> numberOfNeurons, Vector (*hiddenLayerAF)(Vector), Vector (*outputLayerAF)(Vector));
 	void RandomizeAllParameters();
 
 	Vector Evaluate(Vector input);
@@ -35,5 +35,5 @@ public:
 	double Cost(Vector actualOutput, Vector expectedOutput);
 
 	int GetInputSize() const;
-	void SetActivationFunctions(double (*hiddenLayerAF)(double), double (*outputLayerAF)(double));
+	void SetActivationFunctions(Vector (*hiddenLayerAF)(Vector), Vector (*outputLayerAF)(Vector));
 };
