@@ -13,6 +13,7 @@ namespace ActivationFunctions {
 		ReLUAF,
 		LeakyReLUAF,
 		SigmoidAF,
+		SoftmaxAF,
 		TanHAF
 	};
 
@@ -22,7 +23,7 @@ namespace ActivationFunctions {
 	Vector LeakyReLU(Vector input);
 	Vector Sigmoid(Vector input);
 	Vector TanH(Vector input);
-	//std::vector<double> Softmax(std::vector<double> input); WIP
+	Vector Softmax(Vector input);
 
 	FunctionType GetFunctionEnum(Vector (*activationFunction)(Vector));
 	fptr GetFunctionFromEnum(FunctionType funcType);
@@ -35,5 +36,6 @@ namespace ActivationFunctions {
 	Vector LeakyReLUDerivative(Vector input);
 	Vector SigmoidDerivative(Vector input);
 	Vector TanHDerivative(Vector input);
+	Vector SoftmaxDerivative(Vector input);
 }
 namespace AF = ActivationFunctions;

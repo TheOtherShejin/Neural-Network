@@ -19,11 +19,14 @@ public:
 	Vector operator-(Vector other);
 	Vector operator*(Vector other); // Hadamard Product
 	Vector operator*(double other);
+	Vector operator/(double other);
 
 	void operator+=(Vector other);
 	void operator-=(Vector other);
 	void operator*=(Vector other); // Hadamard Product
 	void operator*=(double other);
+	void operator*=(double other);
+	void operator/=(double other);
 
 	double& operator()(int i);
 

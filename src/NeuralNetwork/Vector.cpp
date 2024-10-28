@@ -30,6 +30,11 @@ Vector Vector::operator*(double other) {
 	vec *= other;
 	return vec;
 }
+Vector Vector::operator/(double other) {
+	Vector vec = *this;
+	vec /= other;
+	return vec;
+}
 
 void Vector::operator+=(Vector other) {
 	if (CheckForErrors(other.size)) return;
@@ -52,6 +57,11 @@ void Vector::operator*=(Vector other) {
 void Vector::operator*=(double other) {
 	for (int i = 0; i < size; i++) {
 		elements[i] *= other;
+	}
+}
+void Vector::operator/=(double other) {
+	for (int i = 0; i < size; i++) {
+		elements[i] /= other;
 	}
 }
 

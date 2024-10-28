@@ -20,18 +20,15 @@ namespace ActivationFunctions {
 		return input.ForEach([](double element) -> double { return tanh(element); });
 	}
 	// WIP
-	/*std::vector<Vector> Softmax(std::vector<Vector> input) {
-		std::vector<Vector> output;
-		Vector sum = 0;
-		for (int i = 0; i < input.size(); i++) {
-			output[i] = exp(input[i]);
-			sum += output[i];
+	Vector Softmax(Vector input) {
+		Vector output(input.size);
+		double sum = 0;
+		for (int i = 0; i < input.size; i++) {
+			output(i) = exp(input(i));
+			sum += output(i);
 		}
-		for (int i = 0; i < input.size(); i++) {
-			output[i] /= sum;
-		}
-		return output;
-	}*/
+		return output / sum;
+	}
 
 	FunctionType GetFunctionEnum(Vector (*activationFunction)(Vector)) {
 		if (activationFunction == Sigmoid)
@@ -51,6 +48,9 @@ namespace ActivationFunctions {
 		switch (funcType) {
 		case FunctionType::SigmoidAF:
 			return Sigmoid;
+			break;
+		case FunctionType::SoftmaxAF:
+			return Softmax;
 			break;
 		case FunctionType::TanHAF:
 			return TanH;
@@ -73,6 +73,9 @@ namespace ActivationFunctions {
 		switch (funcType) {
 		case FunctionType::SigmoidAF:
 			return SigmoidDerivative;
+			break;
+		case FunctionType::SoftmaxAF:
+			return SoftmaxDerivative;
 			break;
 		case FunctionType::TanHAF:
 			return TanHDerivative;
@@ -132,5 +135,8 @@ namespace ActivationFunctions {
 	}
 	Vector TanHDerivative(Vector input) {
 		return input.ForEach([](double element) -> double { return 1.0f / pow(cosh(element), 2); });
+	}
+	Vector SoftmaxDerivative(Vector input) {
+
 	}
 }
