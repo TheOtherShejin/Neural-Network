@@ -33,6 +33,8 @@ namespace ActivationFunctions {
 	FunctionType GetFunctionEnum(Vector (*activationFunction)(Vector)) {
 		if (activationFunction == Sigmoid)
 			return FunctionType::SigmoidAF;
+		else if (activationFunction == Softmax)
+			return FunctionType::SoftmaxAF;
 		else if (activationFunction == TanH)
 			return FunctionType::TanHAF;
 		else if (activationFunction == ReLU)
@@ -100,6 +102,9 @@ namespace ActivationFunctions {
 		case FunctionType::SigmoidAF:
 			return SigmoidDerivative(input);
 			break;
+		case FunctionType::SoftmaxAF:
+			return SoftmaxDerivative(input);
+			break;
 		case FunctionType::TanHAF:
 			return TanHDerivative(input);
 			break;
@@ -137,6 +142,8 @@ namespace ActivationFunctions {
 		return input.ForEach([](double element) -> double { return 1.0f / pow(cosh(element), 2); });
 	}
 	Vector SoftmaxDerivative(Vector input) {
-
+		Vector output = Softmax(input);
+		output.ForEach([](double element) -> double { return element * (1 - element); });
+		return output;
 	}
 }
