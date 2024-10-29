@@ -4,9 +4,9 @@
 #include <vector>
 #include "Vector.h"
 
-typedef Vector (*fptr)(Vector);
-
 namespace ActivationFunctions {
+	typedef Vector(*fptr)(Vector);
+
 	enum FunctionType {
 		LinearAF,
 		BinaryStepAF,

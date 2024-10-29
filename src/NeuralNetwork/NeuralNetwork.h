@@ -23,10 +23,13 @@ private:
 
 	void BackPropagate(DataPoint* dataPoint, Vector* actualOutput);
 	int inputSize;
+
+	double (*CostFunction)(Vector, Vector) = nullptr;
+	Vector (*CostFuncDerivative)(Vector, Vector) = nullptr;
 public:
 	std::vector<Layer> layers;
 	
-	NeuralNetwork(std::vector<int> numberOfNeurons, Vector (*hiddenLayerAF)(Vector), Vector (*outputLayerAF)(Vector));
+	NeuralNetwork(std::vector<int> numberOfNeurons, Vector (*hiddenLayerAF)(Vector) = AF::Sigmoid, Vector (*outputLayerAF)(Vector) = AF::Sigmoid, double (*CostFunction)(Vector, Vector) = Cost::MeanSquaredError);
 	void RandomizeAllParameters();
 
 	Vector Evaluate(Vector input);

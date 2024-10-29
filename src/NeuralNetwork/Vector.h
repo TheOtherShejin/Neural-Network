@@ -25,7 +25,6 @@ public:
 	void operator-=(Vector other);
 	void operator*=(Vector other); // Hadamard Product
 	void operator*=(double other);
-	void operator*=(double other);
 	void operator/=(double other);
 
 	double& operator()(int i);
@@ -33,6 +32,7 @@ public:
 	Vector ForEach(double (*iterativeFunc)(double));
 	double Dot(Vector other);
 	double Magnitude();
+	double MagnitudeSqr();
 	void SetZero();
 	void Print();
 };

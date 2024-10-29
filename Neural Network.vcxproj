@@ -141,6 +141,7 @@
     <ClCompile Include="src\Examples\XOR_Problem.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\NeuralNetwork\ActivationFunction.cpp" />
+    <ClCompile Include="src\NeuralNetwork\Cost.cpp" />
     <ClCompile Include="src\NeuralNetwork\Layer.cpp" />
     <ClCompile Include="src\NeuralNetwork\Matrix.cpp" />
     <ClCompile Include="src\NeuralNetwork\ModelExporter.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="src\Examples\MNIST_Processor.h" />
     <ClInclude Include="src\Examples\XOR_Problem.h" />
     <ClInclude Include="src\NeuralNetwork\ActivationFunction.h" />
+    <ClInclude Include="src\NeuralNetwork\Cost.h" />
     <ClInclude Include="src\NeuralNetwork\Layer.h" />
     <ClInclude Include="src\NeuralNetwork\Matrix.h" />
     <ClInclude Include="src\NeuralNetwork\ModelExporter.h" />

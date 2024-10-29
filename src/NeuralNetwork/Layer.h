@@ -4,6 +4,7 @@
 #include <math.h>
 #include <vector>
 #include "ActivationFunction.h"
+#include "Cost.h"
 #include "Vector.h"
 #include "Matrix.h"
 #include <iostream>
@@ -12,6 +13,7 @@ class Layer {
 public:
 	Vector (*ActivationFunction)(Vector) = nullptr;
 	Vector (*ActivationDerivative)(Vector) = nullptr;
+
 	Vector weightedInputs;
 	Vector rawInputs;
 
@@ -31,7 +33,7 @@ public:
 	void UpdateGradients(Vector nodeValues);
 	void ClearGradients();
 
-	Vector CostDerivative(Vector actualOutput, Vector expectedOutput);
-	Vector CalculateOutputLayerErrors(Vector actualOutput, Vector expectedOutput);
+	Vector CostDerivative(Vector actualOutput, Vector expectedOutput, Vector (*CostDerivativeFunc)(Vector, Vector));
+	Vector CalculateOutputLayerErrors(Vector actualOutput, Vector expectedOutput, Vector(*CostDerivativeFunc)(Vector, Vector));
 	Vector CalculateHiddenLayerErrors(Layer& nextLayer, Vector nextLayerErrors);
 };

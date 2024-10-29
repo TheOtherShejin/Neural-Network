@@ -92,6 +92,13 @@ double Vector::Magnitude() {
 	}
 	return sqrt(magnitude);
 }
+double Vector::MagnitudeSqr() {
+	double magnitudeSqr = 0;
+	for (auto& element : elements) {
+		magnitudeSqr += element * element;
+	}
+	return magnitudeSqr;
+}
 void Vector::SetZero() {
 	std::fill(elements.begin(), elements.end(), 0);
 }

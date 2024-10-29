@@ -1,7 +1,7 @@
 #include "Digit_Classifier.h"
 
 void Digit_Classifier() {
-	NeuralNetwork nn({ 784, 30, 10 }, ActivationFunctions::Sigmoid, ActivationFunctions::Sigmoid);
+	NeuralNetwork nn({ 784, 30, 10 }, ActivationFunctions::Sigmoid, ActivationFunctions::Sigmoid, Cost::CrossEntropy);
 	std::cout << "Loading Training Dataset...\n";
 	std::vector<DataPoint> train_dataset = LoadIntoDataset("datasets/mnist_train_normalized.csv");
 	std::cout << "Loading Test Dataset...\n";

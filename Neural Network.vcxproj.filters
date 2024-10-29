@@ -57,6 +57,9 @@
     <ClCompile Include="src\Examples\Digit_Classifier.cpp">
       <Filter>Source Files\Examples</Filter>
     </ClCompile>
+    <ClCompile Include="src\NeuralNetwork\Cost.cpp">
+      <Filter>Source Files\Neural Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\NeuralNetwork\NeuralNetwork.h">
@@ -85,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="src\Examples\Digit_Classifier.h">
       <Filter>Header Files\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NeuralNetwork\Cost.h">
+      <Filter>Header Files\Neural Network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

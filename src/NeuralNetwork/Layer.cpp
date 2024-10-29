@@ -68,8 +68,8 @@ void Layer::ClearGradients() {
 	biasCostGradients.SetZero();
 }
 
-Vector Layer::CalculateOutputLayerErrors(Vector actualOutput, Vector expectedOutput) {
-	return CostDerivative(actualOutput, expectedOutput) * ActivationDerivative(weightedInputs);
+Vector Layer::CalculateOutputLayerErrors(Vector actualOutput, Vector expectedOutput, Vector(*CostDerivativeFunc)(Vector, Vector)) {
+	return CostDerivative(actualOutput, expectedOutput, CostDerivativeFunc) * ActivationDerivative(weightedInputs);
 }
 
 Vector Layer::CalculateHiddenLayerErrors(Layer& nextLayer, Vector nextLayerErrors) {
@@ -86,6 +86,6 @@ Vector Layer::CalculateHiddenLayerErrors(Layer& nextLayer, Vector nextLayerError
 	return errors;*/
 }
 
-Vector Layer::CostDerivative(Vector actualOutput, Vector expectedOutput) {
-	return actualOutput - expectedOutput;
+Vector Layer::CostDerivative(Vector actualOutput, Vector expectedOutput, Vector(*CostDerivativeFunc)(Vector, Vector)) {
+	return CostDerivativeFunc(actualOutput, expectedOutput);
 }

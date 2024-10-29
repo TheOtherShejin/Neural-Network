@@ -1,7 +1,9 @@
 #include "NeuralNetwork.h"
 
-NeuralNetwork::NeuralNetwork(std::vector<int> numberOfNeurons, Vector (*hiddenLayerAF)(Vector), Vector(*outputLayerAF)(Vector)) {
+NeuralNetwork::NeuralNetwork(std::vector<int> numberOfNeurons, Vector (*hiddenLayerAF)(Vector), Vector (*outputLayerAF)(Vector), double (*CostFunction)(Vector, Vector)) {
 	inputSize = numberOfNeurons[0];
+	this->CostFunction = CostFunction;
+	CostFuncDerivative = Cost::GetDerivativeFromEnum(Cost::GetFunctionEnum(CostFunction));
 	for (int i = 1; i < numberOfNeurons.size(); i++) {
 		layers.push_back(Layer(numberOfNeurons[i], numberOfNeurons[i-1], hiddenLayerAF));
 	}
@@ -22,19 +24,14 @@ Vector NeuralNetwork::Evaluate(Vector input) {
 }
 
 double NeuralNetwork::Cost(Vector actualOutput, Vector expectedOutput) {
-	//return (actualOutput - expectedOutput).squaredNorm() * 0.5;
-	Vector output(actualOutput.size);
-	for (int i = 0; i < output.size; i++) {
-		output(i) = actualOutput(i) - expectedOutput(i);
-	}
-	return output.Dot(output) * 0.5; 
+	return (actualOutput - expectedOutput).MagnitudeSqr() * 0.5;
 }
 
 void NeuralNetwork::BackPropagate(DataPoint* dataPoint, Vector* actualOutput) {
 	Layer& outputLayer = layers[layers.size() - 1];
 
 	// Error
-	Vector errors = outputLayer.CalculateOutputLayerErrors(*actualOutput, dataPoint->expectedOutput);
+	Vector errors = outputLayer.CalculateOutputLayerErrors(*actualOutput, dataPoint->expectedOutput, CostFuncDerivative);
 	outputLayer.UpdateGradients(errors);
 
 	for (int i = layers.size() - 2; i >= 0; i--) {
