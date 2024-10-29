@@ -142,8 +142,17 @@ namespace ActivationFunctions {
 		return input.ForEach([](double element) -> double { return 1.0f / pow(cosh(element), 2); });
 	}
 	Vector SoftmaxDerivative(Vector input) {
-		Vector output = Softmax(input);
+		/*Vector output = Softmax(input);
 		output.ForEach([](double element) -> double { return element * (1 - element); });
+		return output;*/
+
+		Vector softmaxInputs = Softmax(input);
+		Vector output(input.size);
+		for (int i = 0; i < input.size; i++) {
+			for (int j = 0; j < input.size; j++) {
+				output(i) += softmaxInputs(i) * ((i == j) - softmaxInputs(j));
+			}
+		}
 		return output;
 	}
 }

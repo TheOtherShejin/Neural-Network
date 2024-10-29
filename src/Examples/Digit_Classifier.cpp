@@ -31,14 +31,44 @@ void Digit_Classifier() {
 			nn.SGD(&train_dataset, epochs, learningRate, miniBatchSize);
 		}
 		if (commandTokens[0] == "test") {
-			// Output
-			std::cout << "Testing...\n";
-			Vector output(10);
-			double cost = 0.0f;
-			int correctPredictions = 0;
-			for (int i = 0; i < test_dataset.size(); i++) {
-				output = nn.Evaluate(test_dataset[i].input);
-				cost += nn.Cost(output, test_dataset[i].expectedOutput);
+			if (commandTokens[1] == "all") {
+				// Output
+				std::cout << "Testing...\n";
+				Vector output(10);
+				double cost = 0.0f;
+				int correctPredictions = 0;
+				for (int i = 0; i < test_dataset.size(); i++) {
+					output = nn.Evaluate(test_dataset[i].input);
+					cost += nn.Cost(output, test_dataset[i].expectedOutput);
+
+					int prediction = 0;
+					double bestConfidence = output(0);
+					for (int i = 0; i < 10; i++) {
+						if (output(i) > bestConfidence) {
+							bestConfidence = output(i);
+							prediction = i;
+						}
+					}
+
+					if (test_dataset[i].expectedOutput(prediction) == 1) correctPredictions++;
+				}
+				cost /= test_dataset.size();
+				std::cout << "Test Completed - Accuracy: " << correctPredictions << " / 10000 (" << (correctPredictions / 100.0f) << "%) - Cost: " << cost << '\n';
+			}
+			else if (commandTokens[1] == "random") {
+				std::random_device dev;
+				std::mt19937 rng(dev());
+				std::uniform_int_distribution<std::mt19937::result_type> dist(0, 9999); // distribution in range [1, 6]
+				int index = dist(rng);
+				Vector output = nn.Evaluate(test_dataset[index].input);
+				
+				int actual = 0;
+				for (int i = 0; i < 10; i++) {
+					if (test_dataset[index].expectedOutput(i)) {
+						actual = i;
+						break;
+					}
+				}
 
 				int prediction = 0;
 				double bestConfidence = output(0);
@@ -49,10 +79,10 @@ void Digit_Classifier() {
 					}
 				}
 
-				if (test_dataset[i].expectedOutput(prediction) == 1) correctPredictions++;
+				std::cout << "Actual Digit: " << actual << '\n';
+				output.Print();
+				std::cout << "Prediction: " << prediction << "\n\n";
 			}
-			cost /= test_dataset.size();
-			std::cout << "Test Completed - Accuracy: " << correctPredictions << " / 10000 (" << (correctPredictions / 100.0f) << "%) - Cost: " << cost << '\n';
 		}
 		else if (commandTokens[0] == "load") {
 			nn = LoadModelFromCSV(commandTokens[1]);
