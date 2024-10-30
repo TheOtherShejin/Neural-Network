@@ -40,8 +40,9 @@ void NeuralNetwork::BackPropagate(DataPoint* dataPoint, Vector* actualOutput) {
 	}
 }
 
-void NeuralNetwork::SGD(std::vector<DataPoint>* dataset, int epochs, double learningRate, int miniBatchSize) {
+void NeuralNetwork::SGD(std::vector<DataPoint>* dataset, int epochs, double learningRate, int miniBatchSize, std::vector<DataPoint>* validation_dataset) {
 	float totalTimeTaken = 0.0f;
+	Vector output(10);
 	std::cout << "Training Started - " << epochs << " Epochs, Learning Rate: " << learningRate << ", Mini-Batch Size: " << miniBatchSize << '\n';
 	for (int i = 0; i < epochs; i++) {
 		std::cout << "Epoch: " << i;
@@ -56,6 +57,29 @@ void NeuralNetwork::SGD(std::vector<DataPoint>* dataset, int epochs, double lear
 
 		std::cout << " - " << (dt.count() * 0.001f) << "s\n";
 		totalTimeTaken += dt.count() * 0.001f;
+
+
+		if (validation_dataset == nullptr) return;
+
+		double cost = 0.0f;
+		int correctPredictions = 0;
+		for (int i = 0; i < validation_dataset->size(); i++) {
+			output = Evaluate((*validation_dataset)[i].input);
+			cost += Cost(output, (*validation_dataset)[i].expectedOutput);
+
+			int prediction = 0;
+			double bestConfidence = output(0);
+			for (int i = 0; i < 10; i++) {
+				if (output(i) > bestConfidence) {
+					bestConfidence = output(i);
+					prediction = i;
+				}
+			}
+
+			if ((*validation_dataset)[i].expectedOutput(prediction) == 1) correctPredictions++;
+		}
+		cost /= validation_dataset->size();
+		std::cout << "Test Completed - Accuracy: " << correctPredictions << " / 10000 (" << (correctPredictions / 100.0f) << "%) - Cost: " << cost << '\n';
 	}
 	std::cout << "Training Completed in " << totalTimeTaken << "s\n";
 }

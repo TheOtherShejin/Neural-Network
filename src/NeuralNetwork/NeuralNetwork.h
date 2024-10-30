@@ -34,7 +34,7 @@ public:
 
 	Vector Evaluate(Vector input);
 	void Learn(std::vector<DataPoint> dataset, double learningRate, int miniBatchSize);
-	void SGD(std::vector<DataPoint>* dataset, int epochs, double learningRate, int miniBatchSize);
+	void SGD(std::vector<DataPoint>* dataset, int epochs, double learningRate, int miniBatchSize, std::vector<DataPoint>* validation_dataset = nullptr);
 	double Cost(Vector actualOutput, Vector expectedOutput);
 
 	int GetInputSize() const;

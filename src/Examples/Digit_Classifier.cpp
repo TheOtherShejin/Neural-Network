@@ -5,7 +5,6 @@ void Digit_Classifier() {
 	std::cout << "Loading Training Dataset...\n";
 	std::vector<DataPoint> validation_dataset;
 	std::vector<DataPoint> train_dataset = LoadIntoDataset("datasets/mnist_train_normalized.csv", 0.15, &validation_dataset);
-	std::cout << validation_dataset.size() << ' ' << train_dataset.size() << '\n';
 	std::cout << "Loading Test Dataset...\n";
 	std::vector<DataPoint> test_dataset = LoadIntoDataset("datasets/mnist_test_normalized.csv");
 
@@ -30,7 +29,7 @@ void Digit_Classifier() {
 			int miniBatchSize = std::stoi(commandTokens[3]);
 
 			// Training
-			nn.SGD(&train_dataset, epochs, learningRate, miniBatchSize);
+			nn.SGD(&train_dataset, epochs, learningRate, miniBatchSize, &validation_dataset);
 		}
 		if (commandTokens[0] == "test") {
 			if (commandTokens[1] == "all") {
