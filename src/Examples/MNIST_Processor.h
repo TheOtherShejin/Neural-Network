@@ -8,4 +8,4 @@
 #include <vector>
 
 void LoadNormalizeAndSave(std::string path, std::string savePath);
-std::vector<DataPoint> LoadIntoDataset(std::string path);
+std::vector<DataPoint> LoadIntoDataset(std::string path, float validationSplit = 0.0f, std::vector<DataPoint>* validation_dataset = nullptr);

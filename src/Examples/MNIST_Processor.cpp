@@ -26,7 +26,7 @@ void LoadNormalizeAndSave(std::string path, std::string savePath) {
 	std::cout << "MNIST data has been normalized from: " << path << ", to: " << savePath << '\n';
 }
 
-std::vector<DataPoint> LoadIntoDataset(std::string path) {
+std::vector<DataPoint> LoadIntoDataset(std::string path, float validationSplit, std::vector<DataPoint>* validation_dataset) {
 	std::ifstream file;
 	std::vector<DataPoint> dataset;
 	file.open(path);
@@ -41,6 +41,8 @@ std::vector<DataPoint> LoadIntoDataset(std::string path) {
 	input.SetZero();
 	Vector expectedOutput{ {0, 0, 0, 0, 0, 0, 0, 0, 0, 0} };
 	std::stringstream ss(line);
+	int imageIndex = 0;
+	int trainAmount = (1 - validationSplit) * 60000;
 	while (std::getline(file, line)) {
 		ss = std::stringstream(line);
 		std::getline(ss, substring, ',');
@@ -53,7 +55,14 @@ std::vector<DataPoint> LoadIntoDataset(std::string path) {
 			index++;
 		}
 
-		dataset.push_back(DataPoint(input, expectedOutput));
+		if (imageIndex < trainAmount)
+			dataset.push_back(DataPoint(input, expectedOutput));
+		else {
+			if (validation_dataset != nullptr)
+			validation_dataset->push_back(DataPoint(input, expectedOutput));
+		}
 		expectedOutput(number) = 0;
+		imageIndex++;
 	}
+	return dataset;
 }
