@@ -11,9 +11,10 @@ void SaveModelToCSV(std::string path, NeuralNetwork* nn) {
 	}
 	file << '\n';
 
-	// Write Activation Functions
+	// Write Activation Functions and Cost Function
 	file << AF::GetFunctionEnum(nn->layers[0].ActivationFunction) << ',';
-	file << AF::GetFunctionEnum(nn->layers[nn->layers.size() - 1].ActivationFunction) << '\n';
+	file << AF::GetFunctionEnum(nn->layers[nn->layers.size() - 1].ActivationFunction) << ',';
+	file << Cost::GetFunctionEnum(nn->CostFunction) << '\n';
 
 	// Write Weights of Each Layer
 	for (auto& layer : nn->layers) {
@@ -43,6 +44,7 @@ NeuralNetwork LoadModelFromCSV(std::string path) {
 
 	std::vector<int> numberOfNeurons;
 	Vector (*hiddenLayerAF)(Vector) = AF::Linear, (*outputLayerAF)(Vector) = AF::Linear;
+	double (*costFunction)(Vector, Vector) = Cost::MeanSquaredError;
 
 	// Load Number Of Layers
 	if (file.good()) {
@@ -60,9 +62,11 @@ NeuralNetwork LoadModelFromCSV(std::string path) {
 		hiddenLayerAF = AF::GetFunctionFromEnum(AF::FunctionType(std::stoi(substring)));
 		std::getline(ss, substring, ',');
 		outputLayerAF = AF::GetFunctionFromEnum(AF::FunctionType(std::stoi(substring)));
+		std::getline(ss, substring, ',');
+		costFunction = Cost::GetFunctionFromEnum(Cost::CostType(std::stoi(substring)));
 	}
 
-	NeuralNetwork nn(numberOfNeurons, hiddenLayerAF, outputLayerAF);
+	NeuralNetwork nn(numberOfNeurons, hiddenLayerAF, outputLayerAF, costFunction);
 
 	// Load Weights Of Each Layer
 	for (int i = 0; i < numberOfNeurons.size() - 1; i++) {
@@ -120,6 +124,9 @@ void SaveModelToJS(std::string path, NeuralNetwork* nn) {
 	file << "	'activationFunctions': [";
 	file << AF::GetFunctionEnum(nn->layers[0].ActivationFunction) << ',';
 	file << AF::GetFunctionEnum(nn->layers[nn->layers.size() - 1].ActivationFunction) << "],\n";
+
+	// Write Cost Function
+	file << "	'cost': " << Cost::GetFunctionEnum(nn->CostFunction) << ",\n";
 
 	// Write Weights of Each Layer
 	file << "	'weights': [";
