@@ -1,118 +1,100 @@
 #include "Digit_Classifier.h"
 
-void Digit_Classifier() {
-	NeuralNetwork nn({ 784, 30, 10 }, ActivationFunctions::Sigmoid, ActivationFunctions::Sigmoid, Cost::MeanSquaredError);
-	std::cout << "Loading Training Dataset...\n";
-	std::vector<DataPoint> validation_dataset;
-	std::vector<DataPoint> train_dataset = LoadIntoDataset("datasets/mnist_train_normalized.csv", 0.15, &validation_dataset);
-	std::cout << "Loading Test Dataset...\n";
-	std::vector<DataPoint> test_dataset = LoadIntoDataset("datasets/mnist_test_normalized.csv");
+void DigitClassifierApp::Run() {
+	Init();
+	Update();
+}
 
-	bool runProgram = true;
+void DigitClassifierApp::Init() {
+	std::cout << "Loading Training Dataset...\n";
+	train_dataset = LoadIntoDataset("datasets/mnist_train_normalized.csv", 0.15, &validation_dataset);
+	std::cout << "Loading Test Dataset...\n";
+	test_dataset = LoadIntoDataset("datasets/mnist_test_normalized.csv");
+}
+
+void DigitClassifierApp::Update() {
 	std::cout << "Enter help to get help.\n";
+	std::string command;
 	while (runProgram) {
-		std::string command;
-		std::cout << "Enter a command:\n";
+		std::cout << "Enter a command: ";
 		std::getline(std::cin, command);
 		if (command == "") continue;
 
-		std::stringstream commandSS(command);
-		std::vector<std::string> commandTokens;
-		std::string token;
-		while (std::getline(commandSS, token, ' ')) {
-			commandTokens.push_back(token);
-		}
+		StringTokens commandTokens = Tokenize(command, ' ');
 
-		if (commandTokens[0] == "train") {
-			int epochs = std::stoi(commandTokens[1]);
-			double learningRate = std::stod(commandTokens[2]);
-			int miniBatchSize = std::stoi(commandTokens[3]);
-
-			// Training
-			nn.SGD(&train_dataset, epochs, learningRate, miniBatchSize, &validation_dataset);
+		if (commandTokens[0] == "train")
+			Train(std::stoi(commandTokens[1]), std::stod(commandTokens[2]), std::stoi(commandTokens[3]));
+		else if (commandTokens[0] == "test") {
+			bool random = false;
+			if (commandTokens[1] == "random") random = true;
+			else if (commandTokens[1] == "all") random = false;
+			Test(random);
 		}
-		if (commandTokens[0] == "test") {
-			if (commandTokens[1] == "all") {
-				// Output
-				std::cout << "Testing...\n";
-				Vector output(10);
-				double cost = 0.0f;
-				int correctPredictions = 0;
-				for (int i = 0; i < test_dataset.size(); i++) {
-					output = nn.Evaluate(test_dataset[i].input);
-					cost += nn.Cost(output, test_dataset[i].expectedOutput);
-
-					int prediction = 0;
-					double bestConfidence = output(0);
-					for (int i = 0; i < 10; i++) {
-						if (output(i) > bestConfidence) {
-							bestConfidence = output(i);
-							prediction = i;
-						}
-					}
-
-					if (test_dataset[i].expectedOutput(prediction) == 1) correctPredictions++;
-				}
-				cost /= test_dataset.size();
-				std::cout << "Test Completed - Accuracy: " << correctPredictions << " / 10000 (" << (correctPredictions / 100.0f) << "%) - Cost: " << cost << '\n';
-			}
-			else if (commandTokens[1] == "random") {
-				std::random_device dev;
-				std::mt19937 rng(dev());
-				std::uniform_int_distribution<std::mt19937::result_type> dist(0, 9999); // distribution in range [1, 6]
-				int index = dist(rng);
-				Vector output = nn.Evaluate(test_dataset[index].input);
-				
-				int actual = 0;
-				for (int i = 0; i < 10; i++) {
-					if (test_dataset[index].expectedOutput(i)) {
-						actual = i;
-						break;
-					}
-				}
-
-				int prediction = 0;
-				double bestConfidence = output(0);
-				for (int i = 0; i < 10; i++) {
-					if (output(i) > bestConfidence) {
-						bestConfidence = output(i);
-						prediction = i;
-					}
-				}
-
-				std::cout << "Actual Digit: " << actual << '\n';
-				output.Print();
-				std::cout << "Prediction: " << prediction << "\n\n";
-			}
-		}
-		else if (commandTokens[0] == "load") {
-			nn = LoadModelFromCSV(commandTokens[1]);
-			std::cout << '\n';
-		}
-		else if (commandTokens[0] == "save") {
-			std::string format = commandTokens[1];
-			if (format == "csv") SaveModelToCSV(commandTokens[2], &nn);
-			else if (format == "js") SaveModelToJS(commandTokens[2], &nn);
-			std::cout << '\n';
-		}
-		else if (commandTokens[0] == "quit") {
-			runProgram = false;
-		}
-		else if (commandTokens[0] == "reset") {
-			nn.RandomizeAllParameters();
-		}
-		else if (commandTokens[0] == "help") {
-			std::cout <<
-				"Commands:\n"
-				"------------\n"
-				"Replace the parameters in brackets with just the parameter values as shown for example:\n"
-				"train 30 3 10\n\n"
-				"train [epochs] [learningRate] [miniBatchSize]\n"
-				"test\n"
-				"save [format] [saveLocation]\n"
-				"load [loadLocation]\n"
-				"reset"
-				"quit\n\n";
-		}
+		else if (commandTokens[0] == "load") Load(commandTokens[1]);
+		else if (commandTokens[0] == "save") Save(commandTokens[1], commandTokens[2]);
+		else if (commandTokens[0] == "quit") Quit();
+		else if (commandTokens[0] == "reset") Reset();
+		else if (commandTokens[0] == "help") Help();
 	}
+}
+
+void DigitClassifierApp::Train(int epochs, double learningRate, int miniBatchSize) {
+	nn.SGD(&train_dataset, epochs, learningRate, miniBatchSize, &validation_dataset);
+}
+void DigitClassifierApp::Test(bool random) {
+	if (!random) {
+		// Output
+		std::cout << "Testing...\n";
+		Vector output(10);
+		double cost = 0.0f;
+		int correctPredictions = 0;
+		for (int i = 0; i < test_dataset.size(); i++) {
+			output = nn.Evaluate(test_dataset[i].input);
+			cost += nn.Cost(output, test_dataset[i].expectedOutput);
+			int prediction = MaxVectorIndex(output);
+			if (test_dataset[i].expectedOutput(prediction) == 1) correctPredictions++;
+		}
+		cost /= test_dataset.size();
+		std::cout << "Test Completed - Accuracy: " << correctPredictions << " / 10000 (" << (correctPredictions / 100.0f) << "%) - Cost: " << cost << "\n\n";
+	}
+	else { // Random
+		std::random_device dev;
+		std::mt19937 rng(dev());
+		std::uniform_int_distribution<std::mt19937::result_type> dist(0, test_dataset.size()-1); // distribution in range [0, test_dataset.size()-1]
+		int index = dist(rng);
+		Vector output = nn.Evaluate(test_dataset[index].input);
+
+		int actual = MaxVectorIndex(test_dataset[index].expectedOutput);
+		int prediction = MaxVectorIndex(output);
+		std::cout << "Actual Digit: " << actual << '\n';
+		output.Print();
+		std::cout << "Prediction: " << prediction << "\n\n";
+	}
+}
+void DigitClassifierApp::Load(std::string path) {
+	nn = LoadModelFromCSV(path);
+}
+void DigitClassifierApp::Save(std::string format, std::string path) {
+	if (format == "csv") SaveModelToCSV(path, &nn);
+	else if (format == "js") SaveModelToJS(path, &nn);
+}
+void DigitClassifierApp::Quit() {
+	runProgram = false;
+}
+void DigitClassifierApp::Reset() {
+	nn.RandomizeAllParameters();
+}
+void DigitClassifierApp::Help() {
+	std::cout <<
+		"Commands:\n"
+		"------------\n"
+		"Replace the parameters in brackets with just the parameter values as shown for example:\n"
+		"train 30 3 10\n\n"
+		"train [epochs] [learningRate] [miniBatchSize]\n"
+		"test [random / all]\n"
+		"save [format] [saveLocation] - Available Formats: .csv and .js\n"
+		"load [loadLocation]\n"
+		"reset - Randomize the neural network's parameters."
+		"help - Show these instructions."
+		"quit\n\n";
 }

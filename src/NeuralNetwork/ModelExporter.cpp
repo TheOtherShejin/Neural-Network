@@ -35,7 +35,7 @@ void SaveModelToCSV(std::string path, NeuralNetwork* nn) {
 	}
 
 	file.close();
-	std::cout << "Model successfully saved at " << path << '\n';
+	std::cout << "Model successfully saved at " << path << "\n\n";
 }
 
 NeuralNetwork LoadModelFromCSV(std::string path) {
@@ -155,5 +155,5 @@ void SaveModelToJS(std::string path, NeuralNetwork* nn) {
 	file << "]\n}";
 
 	file.close();
-	std::cout << "Model successfully saved at " << path << '\n';
+	std::cout << "Model successfully saved at " << path << "\n\n";
 }

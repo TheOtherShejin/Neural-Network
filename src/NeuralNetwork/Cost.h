@@ -8,7 +8,8 @@ namespace Cost {
 
 	enum CostType {
 		MeanSquaredErrorCost,
-		CrossEntropyCost
+		BinaryCrossEntropyCost,
+		CategoricalCrossEntropyCost
 	};
 
 	CostType GetFunctionEnum(double (*costFunc)(Vector, Vector));
@@ -16,8 +17,10 @@ namespace Cost {
 	dfptr GetDerivativeFromEnum(CostType funcType);
 
 	double MeanSquaredError(Vector actualOutput, Vector expectedOutput);
-	double CrossEntropy(Vector actualOutput, Vector expectedOutput);
+	double BinaryCrossEntropy(Vector actualOutput, Vector expectedOutput);
+	double CategoricalCrossEntropy(Vector acutalOutput, Vector expectedOutput);
 
 	Vector MeanSquaredErrorDerivative(Vector actualOutput, Vector expectedOutput);
-	Vector CrossEntropyDerivative(Vector actualOutput, Vector expectedOutput);
+	Vector BinaryCrossEntropyDerivative(Vector actualOutput, Vector expectedOutput);
+	Vector CategoricalCrossEntropyDerivative(Vector actualOutput, Vector expectedOutput);
 }

@@ -60,6 +60,9 @@
     <ClCompile Include="src\NeuralNetwork\Cost.cpp">
       <Filter>Source Files\Neural Network</Filter>
     </ClCompile>
+    <ClCompile Include="src\Examples\Utils.cpp">
+      <Filter>Source Files\Examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\NeuralNetwork\NeuralNetwork.h">
@@ -91,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="src\NeuralNetwork\Cost.h">
       <Filter>Header Files\Neural Network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Examples\Utils.h">
+      <Filter>Header Files\Examples</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

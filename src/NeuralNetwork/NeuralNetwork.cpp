@@ -59,11 +59,12 @@ void NeuralNetwork::SGD(std::vector<DataPoint>* dataset, int epochs, double lear
 		totalTimeTaken += dt.count() * 0.001f;
 
 
-		if (validation_dataset == nullptr) return;
+		if (validation_dataset == nullptr) continue;
 
 		double cost = 0.0f;
 		int correctPredictions = 0;
-		for (int i = 0; i < validation_dataset->size(); i++) {
+		int validationSize = validation_dataset->size();
+		for (int i = 0; i < validationSize; i++) {
 			output = Evaluate((*validation_dataset)[i].input);
 			cost += Cost(output, (*validation_dataset)[i].expectedOutput);
 
@@ -79,7 +80,7 @@ void NeuralNetwork::SGD(std::vector<DataPoint>* dataset, int epochs, double lear
 			if ((*validation_dataset)[i].expectedOutput(prediction) == 1) correctPredictions++;
 		}
 		cost /= validation_dataset->size();
-		std::cout << "Test Completed - Accuracy: " << correctPredictions << " / 10000 (" << (correctPredictions / 100.0f) << "%) - Cost: " << cost << '\n';
+		std::cout << "Test Completed - Accuracy: " << correctPredictions << " / " << validationSize << " (" << (correctPredictions * 100.0f / validationSize) << "%) - Cost: " << cost << '\n';
 	}
 	std::cout << "Training Completed in " << totalTimeTaken << "s\n";
 }

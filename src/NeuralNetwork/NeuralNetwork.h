@@ -16,6 +16,8 @@ struct DataPoint {
 		: input(input), expectedOutput(expectedOutput) {}
 };
 
+typedef std::vector<DataPoint> Dataset;
+
 class NeuralNetwork {
 private:
 	void ApplyAllGradients(double learningRate, int miniBatchSize);

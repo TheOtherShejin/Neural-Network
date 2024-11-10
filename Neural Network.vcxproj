@@ -138,6 +138,7 @@
   <ItemGroup>
     <ClCompile Include="src\Examples\Digit_Classifier.cpp" />
     <ClCompile Include="src\Examples\MNIST_Processor.cpp" />
+    <ClCompile Include="src\Examples\Utils.cpp" />
     <ClCompile Include="src\Examples\XOR_Problem.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\NeuralNetwork\ActivationFunction.cpp" />
@@ -151,6 +152,7 @@
   <ItemGroup>
     <ClInclude Include="src\Examples\Digit_Classifier.h" />
     <ClInclude Include="src\Examples\MNIST_Processor.h" />
+    <ClInclude Include="src\Examples\Utils.h" />
     <ClInclude Include="src\Examples\XOR_Problem.h" />
     <ClInclude Include="src\NeuralNetwork\ActivationFunction.h" />
     <ClInclude Include="src\NeuralNetwork\Cost.h" />
