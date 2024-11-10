@@ -10,6 +10,8 @@ void DigitClassifierApp::Init() {
 	train_dataset = LoadIntoDataset("datasets/mnist_train_normalized.csv", 0.15, &validation_dataset);
 	std::cout << "Loading Test Dataset...\n";
 	test_dataset = LoadIntoDataset("datasets/mnist_test_normalized.csv");
+
+	nn.monitorValues = NeuralNetwork::MONITOR_TRAIN_ACCURACY | NeuralNetwork::MONITOR_VALIDATION_ACCURACY;
 }
 
 void DigitClassifierApp::Update() {
@@ -51,11 +53,11 @@ void DigitClassifierApp::Test(bool random) {
 		for (int i = 0; i < test_dataset.size(); i++) {
 			output = nn.Evaluate(test_dataset[i].input);
 			cost += nn.Cost(output, test_dataset[i].expectedOutput);
-			int prediction = MaxVectorIndex(output);
+			int prediction = output.MaxIndex();
 			if (test_dataset[i].expectedOutput(prediction) == 1) correctPredictions++;
 		}
 		cost /= test_dataset.size();
-		std::cout << "Test Completed - Accuracy: " << correctPredictions << " / 10000 (" << (correctPredictions / 100.0f) << "%) - Cost: " << cost << "\n\n";
+		std::cout << "Test Completed - Accuracy: " << correctPredictions << " / " << test_dataset.size() << " (" << (correctPredictions / 100.0f) << "%) - Cost: " << cost << "\n\n";
 	}
 	else { // Random
 		std::random_device dev;
@@ -64,8 +66,8 @@ void DigitClassifierApp::Test(bool random) {
 		int index = dist(rng);
 		Vector output = nn.Evaluate(test_dataset[index].input);
 
-		int actual = MaxVectorIndex(test_dataset[index].expectedOutput);
-		int prediction = MaxVectorIndex(output);
+		int actual = test_dataset[index].expectedOutput.MaxIndex();
+		int prediction = output.MaxIndex();
 		std::cout << "Actual Digit: " << actual << '\n';
 		output.Print();
 		std::cout << "Prediction: " << prediction << "\n\n";

@@ -31,12 +31,20 @@ public:
 	std::vector<Layer> layers;
 	double (*CostFunction)(Vector, Vector) = nullptr;
 	
+	enum MonitorType {
+		MONITOR_VALIDATION_ACCURACY = 1,
+		MONITOR_VALIDATION_COST = 2,
+		MONITOR_TRAIN_ACCURACY = 4,
+		MONITOR_TRAIN_COST = 8
+	};
+	int monitorValues;
+
 	NeuralNetwork(std::vector<int> numberOfNeurons, Vector (*hiddenLayerAF)(Vector) = AF::Sigmoid, Vector (*outputLayerAF)(Vector) = AF::Sigmoid, double (*CostFunction)(Vector, Vector) = Cost::MeanSquaredError);
 	void RandomizeAllParameters();
 
 	Vector Evaluate(Vector input);
 	void Learn(std::vector<DataPoint> dataset, double learningRate, int miniBatchSize);
-	void SGD(std::vector<DataPoint>* dataset, int epochs, double learningRate, int miniBatchSize, std::vector<DataPoint>* validation_dataset = nullptr);
+	void SGD(Dataset* dataset, int epochs, double learningRate, int miniBatchSize, Dataset* validation_dataset = nullptr);
 	double Cost(Vector actualOutput, Vector expectedOutput);
 
 	int GetInputSize() const;

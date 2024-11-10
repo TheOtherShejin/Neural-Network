@@ -31,8 +31,10 @@ public:
 
 	Vector ForEach(double (*iterativeFunc)(double));
 	double Dot(Vector other);
-	double Magnitude();
-	double MagnitudeSqr();
+	double Magnitude() const;
+	double MagnitudeSqr() const;
+	int MaxIndex() const;
+
 	void SetZero();
-	void Print();
+	void Print() const;
 };

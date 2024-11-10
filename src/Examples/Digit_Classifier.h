@@ -12,7 +12,7 @@ public:
 	void Run();
 private:
 	bool runProgram = true;
-	NeuralNetwork nn{ { 784, 30, 10 }, ActivationFunctions::Sigmoid, ActivationFunctions::Sigmoid, Cost::BinaryCrossEntropy };
+	NeuralNetwork nn{ { 784, 30, 10 }, ActivationFunctions::Sigmoid, ActivationFunctions::Sigmoid, Cost::MeanSquaredError };
 	Dataset train_dataset, validation_dataset, test_dataset;
 
 	void Init();

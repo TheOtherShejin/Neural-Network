@@ -40,7 +40,7 @@ void NeuralNetwork::BackPropagate(DataPoint* dataPoint, Vector* actualOutput) {
 	}
 }
 
-void NeuralNetwork::SGD(std::vector<DataPoint>* dataset, int epochs, double learningRate, int miniBatchSize, std::vector<DataPoint>* validation_dataset) {
+void NeuralNetwork::SGD(Dataset* dataset, int epochs, double learningRate, int miniBatchSize, Dataset* validation_dataset) {
 	float totalTimeTaken = 0.0f;
 	Vector output(10);
 	std::cout << "Training Started - " << epochs << " Epochs, Learning Rate: " << learningRate << ", Mini-Batch Size: " << miniBatchSize << '\n';
@@ -58,29 +58,47 @@ void NeuralNetwork::SGD(std::vector<DataPoint>* dataset, int epochs, double lear
 		std::cout << " - " << (dt.count() * 0.001f) << "s\n";
 		totalTimeTaken += dt.count() * 0.001f;
 
+		double trainCost = 0.0f;
+		int correctPredictions = 0;
+		int trainSize = dataset->size();
+		for (int i = 0; i < trainSize; i++) {
+			output = Evaluate((*dataset)[i].input);
+			if (monitorValues & MONITOR_TRAIN_COST)
+				trainCost += Cost(output, (*dataset)[i].expectedOutput);
+
+			int prediction = output.MaxIndex();
+			if (monitorValues & MONITOR_TRAIN_ACCURACY && (*dataset)[i].expectedOutput(prediction) == 1)
+				correctPredictions++;
+		}
+		trainCost /= trainSize;
+		if (monitorValues & MONITOR_VALIDATION_ACCURACY)
+			std::cout << " - Train Accuracy: " << correctPredictions << " / " << trainSize << " (" << (correctPredictions * 100.0f / trainSize) << "%)";
+		if (monitorValues & MONITOR_VALIDATION_COST)
+			std::cout << " - Train Cost : " << trainCost;
+		std::cout << '\n';
 
 		if (validation_dataset == nullptr) continue;
 
-		double cost = 0.0f;
-		int correctPredictions = 0;
+		double validationCost = 0.0f;
+		correctPredictions = 0;
 		int validationSize = validation_dataset->size();
 		for (int i = 0; i < validationSize; i++) {
 			output = Evaluate((*validation_dataset)[i].input);
-			cost += Cost(output, (*validation_dataset)[i].expectedOutput);
+			if (monitorValues & MONITOR_VALIDATION_COST)
+				validationCost += Cost(output, (*validation_dataset)[i].expectedOutput);
 
-			int prediction = 0;
-			double bestConfidence = output(0);
-			for (int i = 0; i < 10; i++) {
-				if (output(i) > bestConfidence) {
-					bestConfidence = output(i);
-					prediction = i;
-				}
-			}
-
-			if ((*validation_dataset)[i].expectedOutput(prediction) == 1) correctPredictions++;
+			int prediction = output.MaxIndex();
+			if (monitorValues & MONITOR_VALIDATION_ACCURACY && (*validation_dataset)[i].expectedOutput(prediction) == 1)
+				correctPredictions++;
 		}
-		cost /= validation_dataset->size();
-		std::cout << "Test Completed - Accuracy: " << correctPredictions << " / " << validationSize << " (" << (correctPredictions * 100.0f / validationSize) << "%) - Cost: " << cost << '\n';
+		validationCost /= validationSize;
+
+		std::cout << "Test Completed";
+		if (monitorValues & MONITOR_VALIDATION_ACCURACY)
+			std::cout << " - Validation Accuracy: " << correctPredictions << " / " << validationSize << " (" << (correctPredictions * 100.0f / validationSize) << "%)";
+		if (monitorValues & MONITOR_VALIDATION_COST)
+			std::cout << " - Validation Cost : " << validationCost;
+		std::cout << '\n';
 	}
 	std::cout << "Training Completed in " << totalTimeTaken << "s\n";
 }

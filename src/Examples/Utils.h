@@ -9,4 +9,3 @@
 typedef std::vector<std::string> StringTokens;
 
 StringTokens Tokenize(std::string text, char separator);
-int MaxVectorIndex(Vector vector);

@@ -85,24 +85,36 @@ double Vector::Dot(Vector other) {
 	}
 	return dotProduct;
 }
-double Vector::Magnitude() {
+double Vector::Magnitude() const {
 	double magnitude = 0;
 	for (auto& element : elements) {
 		magnitude += element * element;
 	}
 	return sqrt(magnitude);
 }
-double Vector::MagnitudeSqr() {
+double Vector::MagnitudeSqr() const {
 	double magnitudeSqr = 0;
 	for (auto& element : elements) {
 		magnitudeSqr += element * element;
 	}
 	return magnitudeSqr;
 }
+int Vector::MaxIndex() const {
+	int highestIndex = 0;
+	double highestValue = elements[0];
+	for (int i = 0; i < 10; i++) {
+		if (elements[i] > highestValue) {
+			highestValue = elements[i];
+			highestIndex = i;
+		}
+	}
+	return highestIndex;
+}
+
 void Vector::SetZero() {
 	std::fill(elements.begin(), elements.end(), 0);
 }
-void Vector::Print() {
+void Vector::Print() const {
 	std::cout << '(';
 	for (int i = 0; i < elements.size()-1; i++) {
 		std::cout << elements[i] << ", ";
