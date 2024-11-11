@@ -25,6 +25,18 @@
     <Filter Include="Header Files\Examples">
       <UniqueIdentifier>{4de1ad95-64a0-4ff9-9975-34f2c38285b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Neural Network\Miscellaneous">
+      <UniqueIdentifier>{89623d90-6164-4982-92a9-88c5e84fea5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Neural Network\Maths">
+      <UniqueIdentifier>{6a647738-0fb4-4ebb-98a7-e6759a539f57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Neural Network\Maths">
+      <UniqueIdentifier>{4940dd22-428d-4d98-88b3-62f6660fee59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Neural Network\Miscellaneous">
+      <UniqueIdentifier>{9b263b50-1038-446a-99fc-002254fbcf3d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -48,12 +60,6 @@
     <ClCompile Include="src\Examples\MNIST_Processor.cpp">
       <Filter>Source Files\Examples</Filter>
     </ClCompile>
-    <ClCompile Include="src\NeuralNetwork\Maths\Vector.cpp">
-      <Filter>Source Files\Neural Network</Filter>
-    </ClCompile>
-    <ClCompile Include="src\NeuralNetwork\Maths\Matrix.cpp">
-      <Filter>Source Files\Neural Network</Filter>
-    </ClCompile>
     <ClCompile Include="src\Examples\Digit_Classifier.cpp">
       <Filter>Source Files\Examples</Filter>
     </ClCompile>
@@ -62,6 +68,18 @@
     </ClCompile>
     <ClCompile Include="src\Examples\Utils.cpp">
       <Filter>Source Files\Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NeuralNetwork\Maths\Vector.cpp">
+      <Filter>Source Files\Neural Network\Maths</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NeuralNetwork\Maths\Matrix.cpp">
+      <Filter>Source Files\Neural Network\Maths</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NeuralNetwork\Miscellaneous\Logger.cpp">
+      <Filter>Source Files\Neural Network\Miscellaneous</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NeuralNetwork\Maths\Random.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -83,12 +101,6 @@
     <ClInclude Include="include\Examples\MNIST_Processor.h">
       <Filter>Header Files\Examples</Filter>
     </ClInclude>
-    <ClInclude Include="include\NeuralNetwork\Maths\Vector.h">
-      <Filter>Header Files\Neural Network</Filter>
-    </ClInclude>
-    <ClInclude Include="include\NeuralNetwork\Maths\Matrix.h">
-      <Filter>Header Files\Neural Network</Filter>
-    </ClInclude>
     <ClInclude Include="include\Examples\Digit_Classifier.h">
       <Filter>Header Files\Examples</Filter>
     </ClInclude>
@@ -97,6 +109,18 @@
     </ClInclude>
     <ClInclude Include="include\Examples\Utils.h">
       <Filter>Header Files\Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NeuralNetwork\Miscellaneous\Logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NeuralNetwork\Maths\Vector.h">
+      <Filter>Header Files\Neural Network\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NeuralNetwork\Maths\Matrix.h">
+      <Filter>Header Files\Neural Network\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NeuralNetwork\Maths\Random.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

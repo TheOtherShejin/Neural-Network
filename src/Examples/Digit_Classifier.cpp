@@ -6,32 +6,26 @@ void DigitClassifierApp::Run() {
 }
 
 void DigitClassifierApp::Init() {
-	std::cout << "Loading Training Dataset...\n";
+	Log("Loading Training Dataset...\n");
 	train_dataset = LoadIntoDataset("datasets/mnist_train_normalized.csv", 0.15, &validation_dataset);
-	std::cout << "Loading Test Dataset...\n";
+	Log("Loading Test Dataset...\n");
 	test_dataset = LoadIntoDataset("datasets/mnist_test_normalized.csv");
 
 	nn.monitorValues = NeuralNetwork::MONITOR_TRAIN_ACCURACY | NeuralNetwork::MONITOR_VALIDATION_ACCURACY;
 }
 
 void DigitClassifierApp::Update() {
-	std::cout << "Enter help to get help.\n";
+	Log("Enter help to get help.\n");
 	std::string command;
 	while (runProgram) {
-		std::cout << "Enter a command: ";
+		Log("Enter a command: ");
 		std::getline(std::cin, command);
 		if (command == "") continue;
 
 		StringTokens commandTokens = Tokenize(command, ' ');
 
-		if (commandTokens[0] == "train")
-			Train(std::stoi(commandTokens[1]), std::stod(commandTokens[2]), std::stoi(commandTokens[3]));
-		else if (commandTokens[0] == "test") {
-			bool random = false;
-			if (commandTokens[1] == "random") random = true;
-			else if (commandTokens[1] == "all") random = false;
-			Test(random);
-		}
+		if (commandTokens[0] == "train") Train(std::stoi(commandTokens[1]), std::stod(commandTokens[2]), std::stoi(commandTokens[3]));
+		else if (commandTokens[0] == "test") Test(commandTokens[1] == "random" ? true : false);
 		else if (commandTokens[0] == "load") Load(commandTokens[1]);
 		else if (commandTokens[0] == "save") Save(commandTokens[1], commandTokens[2]);
 		else if (commandTokens[0] == "quit") Quit();
@@ -46,7 +40,7 @@ void DigitClassifierApp::Train(int epochs, double learningRate, int miniBatchSiz
 void DigitClassifierApp::Test(bool random) {
 	if (!random) {
 		// Output
-		std::cout << "Testing...\n";
+		Log("Testing...\n");
 		Vector output(10);
 		double cost = 0.0f;
 		int correctPredictions = 0;
@@ -57,20 +51,18 @@ void DigitClassifierApp::Test(bool random) {
 			if (test_dataset[i].expectedOutput(prediction) == 1) correctPredictions++;
 		}
 		cost /= test_dataset.size();
-		std::cout << "Test Completed - Accuracy: " << correctPredictions << " / " << test_dataset.size() << " (" << (correctPredictions / 100.0f) << "%) - Cost: " << cost << "\n\n";
+		Log("Test Completed - Accuracy: " + std::to_string(correctPredictions) + " / " + std::to_string(test_dataset.size()) + " (" + std::to_string(correctPredictions / 100.0f)
+			+ "%) - Cost: " + std::to_string(cost) + "\n\n");
 	}
 	else { // Random
-		std::random_device dev;
-		std::mt19937 rng(dev());
-		std::uniform_int_distribution<std::mt19937::result_type> dist(0, test_dataset.size()-1); // distribution in range [0, test_dataset.size()-1]
-		int index = dist(rng);
+		int index = RandomFromRange(0, test_dataset.size() - 1);
 		Vector output = nn.Evaluate(test_dataset[index].input);
 
 		int actual = test_dataset[index].expectedOutput.MaxIndex();
 		int prediction = output.MaxIndex();
-		std::cout << "Actual Digit: " << actual << '\n';
+		Log("Actual Digit: " + actual + '\n');
 		output.Print();
-		std::cout << "Prediction: " << prediction << "\n\n";
+		Log("Prediction: " + std::to_string(prediction) + "\n\n");
 	}
 }
 void DigitClassifierApp::Load(std::string path) {
@@ -87,7 +79,7 @@ void DigitClassifierApp::Reset() {
 	nn.RandomizeAllParameters();
 }
 void DigitClassifierApp::Help() {
-	std::cout <<
+	Log(
 		"Commands:\n"
 		"------------\n"
 		"Replace the parameters in brackets with just the parameter values as shown for example:\n"
@@ -98,5 +90,6 @@ void DigitClassifierApp::Help() {
 		"load [loadLocation]\n"
 		"reset - Randomize the neural network's parameters."
 		"help - Show these instructions."
-		"quit\n\n";
+		"quit\n\n"
+	);
 }

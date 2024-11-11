@@ -1,12 +1,13 @@
 #pragma once
 
-#include <iostream>
 #include <chrono>
 #include <algorithm>
 #include <random>
 #include <NeuralNetwork/Layer.h>
 #include <NeuralNetwork/Maths/Vector.h>
 #include <NeuralNetwork/Maths/Matrix.h>
+#include <NeuralNetwork/Maths/Random.h>
+#include <NeuralNetwork/Miscellaneous/Logger.h>
 
 struct DataPoint {
 	Vector input, expectedOutput;
