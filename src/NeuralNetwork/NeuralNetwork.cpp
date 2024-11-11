@@ -1,4 +1,4 @@
-#include "NeuralNetwork.h"
+#include <NeuralNetwork/NeuralNetwork.h>
 
 NeuralNetwork::NeuralNetwork(std::vector<int> numberOfNeurons, Vector (*hiddenLayerAF)(Vector), Vector (*outputLayerAF)(Vector), double (*CostFunction)(Vector, Vector)) {
 	inputSize = numberOfNeurons[0];
@@ -55,7 +55,7 @@ void NeuralNetwork::SGD(Dataset* dataset, int epochs, double learningRate, int m
 		auto endTime = std::chrono::high_resolution_clock::now();
 		auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
 
-		std::cout << " - " << (dt.count() * 0.001f) << "s\n";
+		std::cout << " - " << (dt.count() * 0.001f) << 's';
 		totalTimeTaken += dt.count() * 0.001f;
 
 		double trainCost = 0.0f;
@@ -75,9 +75,11 @@ void NeuralNetwork::SGD(Dataset* dataset, int epochs, double learningRate, int m
 			std::cout << " - Train Accuracy: " << correctPredictions << " / " << trainSize << " (" << (correctPredictions * 100.0f / trainSize) << "%)";
 		if (monitorValues & MONITOR_VALIDATION_COST)
 			std::cout << " - Train Cost : " << trainCost;
-		std::cout << '\n';
 
-		if (validation_dataset == nullptr) continue;
+		if (validation_dataset == nullptr) {
+			std::cout << '\n';
+			continue;
+		}
 
 		double validationCost = 0.0f;
 		correctPredictions = 0;
@@ -92,8 +94,6 @@ void NeuralNetwork::SGD(Dataset* dataset, int epochs, double learningRate, int m
 				correctPredictions++;
 		}
 		validationCost /= validationSize;
-
-		std::cout << "Test Completed";
 		if (monitorValues & MONITOR_VALIDATION_ACCURACY)
 			std::cout << " - Validation Accuracy: " << correctPredictions << " / " << validationSize << " (" << (correctPredictions * 100.0f / validationSize) << "%)";
 		if (monitorValues & MONITOR_VALIDATION_COST)

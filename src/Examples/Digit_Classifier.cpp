@@ -1,4 +1,4 @@
-#include "Digit_Classifier.h"
+#include <Examples/Digit_Classifier.h>
 
 void DigitClassifierApp::Run() {
 	Init();

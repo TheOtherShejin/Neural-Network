@@ -1,4 +1,4 @@
-#include "MNIST_Processor.h"
+#include <Examples/MNIST_Processor.h>
 
 void LoadNormalizeAndSave(std::string path, std::string savePath) {
 	std::ifstream rawFile;

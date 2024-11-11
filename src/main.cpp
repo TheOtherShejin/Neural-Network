@@ -1,4 +1,4 @@
-#include "Examples/Digit_Classifier.h"
+#include <Examples/Digit_Classifier.h>
 
 int main() {
 	DigitClassifierApp app;

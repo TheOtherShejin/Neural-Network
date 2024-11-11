@@ -1,4 +1,4 @@
-#include "ModelExporter.h"
+#include <NeuralNetwork/ModelExporter.h>
 
 void SaveModelToCSV(std::string path, NeuralNetwork* nn) {
 	std::ofstream file;

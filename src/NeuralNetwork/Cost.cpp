@@ -1,4 +1,4 @@
-#include "Cost.h"
+#include <NeuralNetwork/Cost.h>
 
 namespace Cost {
 	CostType GetFunctionEnum(double (*costFunc)(Vector, Vector)) {

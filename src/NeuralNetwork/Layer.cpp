@@ -1,4 +1,4 @@
-#include "Layer.h"
+#include <NeuralNetwork/Layer.h>
 
 Layer::Layer(int numOfNodes, int numOfIncomingNodes, Vector (*ActivationFunction)(Vector))
 	: numOfNodes(numOfNodes), numOfIncomingNodes(numOfIncomingNodes), ActivationFunction(ActivationFunction) {

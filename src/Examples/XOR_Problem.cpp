@@ -1,4 +1,4 @@
-#include "XOR_Problem.h"
+#include <Examples/XOR_Problem.h>
 
 /*
 Commands:

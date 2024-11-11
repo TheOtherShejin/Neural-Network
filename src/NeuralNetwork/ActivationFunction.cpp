@@ -1,4 +1,4 @@
-#include "ActivationFunction.h"
+#include <NeuralNetwork/ActivationFunction.h>
 
 namespace ActivationFunctions {
 	Vector Linear(Vector input) {
