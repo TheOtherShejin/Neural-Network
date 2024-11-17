@@ -6,19 +6,19 @@ void DigitClassifierApp::Run() {
 }
 
 void DigitClassifierApp::Init() {
-	Log("Loading Training Dataset...\n");
+	std::cout << "Loading Training Dataset...\n";
 	train_dataset = LoadIntoDataset("datasets/mnist_train_normalized.csv", 0.15, &validation_dataset);
-	Log("Loading Test Dataset...\n");
+	std::cout << "Loading Test Dataset...\n";
 	test_dataset = LoadIntoDataset("datasets/mnist_test_normalized.csv");
 
 	nn.monitorValues = NeuralNetwork::MONITOR_TRAIN_ACCURACY | NeuralNetwork::MONITOR_VALIDATION_ACCURACY;
 }
 
 void DigitClassifierApp::Update() {
-	Log("Enter help to get help.\n");
+	std::cout << "Enter help to get help.\n";
 	std::string command;
 	while (runProgram) {
-		Log("Enter a command: ");
+		std::cout << "Enter a command: ";
 		std::getline(std::cin, command);
 		if (command == "") continue;
 
@@ -40,7 +40,7 @@ void DigitClassifierApp::Train(int epochs, double learningRate, int miniBatchSiz
 void DigitClassifierApp::Test(bool random) {
 	if (!random) {
 		// Output
-		Log("Testing...\n");
+		std::cout << "Testing...\n";
 		Vector output(10);
 		double cost = 0.0f;
 		int correctPredictions = 0;
@@ -51,8 +51,8 @@ void DigitClassifierApp::Test(bool random) {
 			if (test_dataset[i].expectedOutput(prediction) == 1) correctPredictions++;
 		}
 		cost /= test_dataset.size();
-		Log("Test Completed - Accuracy: " + std::to_string(correctPredictions) + " / " + std::to_string(test_dataset.size()) + " (" + std::to_string(correctPredictions / 100.0f)
-			+ "%) - Cost: " + std::to_string(cost) + "\n\n");
+		std::cout << "Test Completed - Accuracy: " << correctPredictions << " / " << test_dataset.size() << " (" << (correctPredictions / 100.0f)
+			<< "%) - Cost: " << cost << "\n\n";
 	}
 	else { // Random
 		int index = RandomFromRange(0, test_dataset.size() - 1);
@@ -60,9 +60,9 @@ void DigitClassifierApp::Test(bool random) {
 
 		int actual = test_dataset[index].expectedOutput.MaxIndex();
 		int prediction = output.MaxIndex();
-		Log("Actual Digit: " + actual + '\n');
+		std::cout << "Actual Digit : " << actual << '\n';
 		output.Print();
-		Log("Prediction: " + std::to_string(prediction) + "\n\n");
+		std::cout << "Prediction: " << std::to_string(prediction) << "\n\n";
 	}
 }
 void DigitClassifierApp::Load(std::string path) {
@@ -79,7 +79,7 @@ void DigitClassifierApp::Reset() {
 	nn.RandomizeAllParameters();
 }
 void DigitClassifierApp::Help() {
-	Log(
+	std::cout <<
 		"Commands:\n"
 		"------------\n"
 		"Replace the parameters in brackets with just the parameter values as shown for example:\n"
@@ -88,8 +88,8 @@ void DigitClassifierApp::Help() {
 		"test [random / all]\n"
 		"save [format] [saveLocation] - Available Formats: .csv and .js\n"
 		"load [loadLocation]\n"
-		"reset - Randomize the neural network's parameters."
-		"help - Show these instructions."
+		"reset - Randomize the neural network's parameters.\n"
+		"help - Show these instructions.\n"
 		"quit\n\n"
-	);
+	;
 }

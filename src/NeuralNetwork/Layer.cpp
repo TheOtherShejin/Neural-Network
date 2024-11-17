@@ -69,6 +69,10 @@ void Layer::ClearGradients() {
 }
 
 Vector Layer::CalculateOutputLayerErrors(Vector actualOutput, Vector expectedOutput, Vector(*CostDerivativeFunc)(Vector, Vector)) {
+	if (AF::GetFunctionEnum(ActivationFunction) == AF::SoftmaxAF) {
+		return actualOutput - expectedOutput;
+	}
+
 	return CostDerivative(actualOutput, expectedOutput, CostDerivativeFunc) * ActivationDerivative(weightedInputs);
 }
 

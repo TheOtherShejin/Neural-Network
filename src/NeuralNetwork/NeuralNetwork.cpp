@@ -43,10 +43,10 @@ void NeuralNetwork::BackPropagate(DataPoint* dataPoint, Vector* actualOutput) {
 void NeuralNetwork::SGD(Dataset* dataset, int epochs, double learningRate, int miniBatchSize, Dataset* validation_dataset) {
 	float totalTimeTaken = 0.0f;
 	Vector output(10);
-	Log("Training Started - " + std::to_string(epochs) + " Epochs, Learning Rate: " + std::to_string(learningRate) + ", Mini-Batch Size: " + std::to_string(miniBatchSize) + '\n');
+	std::cout << "Training Started - " << epochs << " Epochs, Learning Rate: " << learningRate << ", Mini-Batch Size: " << miniBatchSize << '\n';
 
 	for (int i = 0; i < epochs; i++) {
-		Log("Epoch: " + i);
+		std::cout << "Epoch: " << i;
 
 		// Randomize Train
 		std::shuffle(dataset->begin(), dataset->end(), std::mt19937{std::random_device{}()});
@@ -73,12 +73,12 @@ void NeuralNetwork::SGD(Dataset* dataset, int epochs, double learningRate, int m
 		}
 		trainCost /= trainSize;
 		if (monitorValues & MONITOR_VALIDATION_ACCURACY)
-			Log(" - Train Accuracy: " + std::to_string(correctPredictions) + " / " + std::to_string(trainSize) + " (" + std::to_string(correctPredictions * 100.0f / trainSize) + "%)");
+			std::cout << " - Train Accuracy: " << correctPredictions << " / " << trainSize << " (" << (correctPredictions * 100.0f / trainSize) << "%)";
 		if (monitorValues & MONITOR_VALIDATION_COST)
-			Log(" - Train Cost : " + std::to_string(trainCost));
+			std::cout << " - Train Cost : " << trainCost;
 
 		if (validation_dataset == nullptr) {
-			Log("\n");
+			std::cout << '\n';
 			continue;
 		}
 
@@ -96,12 +96,12 @@ void NeuralNetwork::SGD(Dataset* dataset, int epochs, double learningRate, int m
 		}
 		validationCost /= validationSize;
 		if (monitorValues & MONITOR_VALIDATION_ACCURACY)
-			Log(" - Validation Accuracy: " + std::to_string(correctPredictions) + " / " + std::to_string(validationSize) + " (" + std::to_string(correctPredictions * 100.0f / validationSize) + "%)");
+			std::cout << " - Validation Accuracy: " << correctPredictions << " / " << validationSize << " (" << (correctPredictions * 100.0f / validationSize) << "%)";
 		if (monitorValues & MONITOR_VALIDATION_COST)
-			Log(" - Validation Cost : " + std::to_string(validationCost));
-		Log("\n");
+			std::cout << " - Validation Cost : " << validationCost;
+		std::cout << '\n';
 	}
-	Log("Training Completed in " + std::to_string(totalTimeTaken) + "s\n");
+	std::cout << "Training Completed in " << totalTimeTaken << "s\n";
 }
 
 void NeuralNetwork::Learn(std::vector<DataPoint> dataset, double learningRate, int miniBatchSize) {
