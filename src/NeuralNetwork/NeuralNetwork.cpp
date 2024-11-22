@@ -42,10 +42,28 @@ void NeuralNetwork::BackPropagate(DataPoint* dataPoint, Vector* actualOutput) {
 void NeuralNetwork::SGD(Dataset* dataset, int epochs, double learningRate, int miniBatchSize, Dataset* validation_dataset) {
 	float totalTimeTaken = 0.0f;
 	Vector output(10);
-	std::cout << "Training Started - " << epochs << " Epochs, Learning Rate: " << learningRate << ", Mini-Batch Size: " << miniBatchSize << '\n';
+	std::ofstream file;
+	bool saveData = (settings.monitorValues & MONITOR_SAVE_PERFORMANCE_DATA);
+	if (saveData) {
+		file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
+		try {
+			file.open(settings.performanceReportFilePath);
+			file << "Epoch, ";
+			if (settings.monitorValues & MONITOR_TRAIN_ACCURACY) file << "Train Accuracy, ";
+			if (settings.monitorValues & MONITOR_TRAIN_COST) file << "Train Cost, ";
+			if (settings.monitorValues & MONITOR_VALIDATION_ACCURACY) file << "Validation Accuracy, ";
+			if (settings.monitorValues & MONITOR_VALIDATION_COST) file << "Validation Cost, ";
+			file << '\n';
+		}
+		catch (std::ofstream::failure e) {
+			std::cout << e.what() << '\n';
+		}
+	}
 
+	std::cout << "Training Started - " << epochs << " Epochs, Learning Rate: " << learningRate << ", Mini-Batch Size: " << miniBatchSize << '\n';
 	for (int i = 0; i < epochs; i++) {
 		std::cout << "Epoch: " << i;
+		if (saveData) file << i << ", ";
 
 		// Randomize Train
 		std::shuffle(dataset->begin(), dataset->end(), std::mt19937{std::random_device{}()});
@@ -63,21 +81,27 @@ void NeuralNetwork::SGD(Dataset* dataset, int epochs, double learningRate, int m
 		int trainSize = dataset->size();
 		for (int i = 0; i < trainSize; i++) {
 			output = Evaluate((*dataset)[i].input);
-			if (monitorValues & MONITOR_TRAIN_COST)
+			if (settings.monitorValues & MONITOR_TRAIN_COST) {
 				trainCost += Cost(output, (*dataset)[i].expectedOutput);
+			}
 
 			int prediction = output.MaxIndex();
-			if (monitorValues & MONITOR_TRAIN_ACCURACY && (*dataset)[i].expectedOutput(prediction) == 1)
+			if (settings.monitorValues & MONITOR_TRAIN_ACCURACY && (*dataset)[i].expectedOutput(prediction) == 1)
 				correctPredictions++;
 		}
 		trainCost /= trainSize;
-		if (monitorValues & MONITOR_VALIDATION_ACCURACY)
+		if (settings.monitorValues & MONITOR_TRAIN_ACCURACY) {
 			std::cout << " - Train Accuracy: " << correctPredictions << " / " << trainSize << " (" << (correctPredictions * 100.0f / trainSize) << "%)";
-		if (monitorValues & MONITOR_VALIDATION_COST)
+			if (saveData) file << (correctPredictions * 100.0f / trainSize) << ", ";
+		}
+		if (settings.monitorValues & MONITOR_TRAIN_COST) {
 			std::cout << " - Train Cost : " << trainCost;
+			if (saveData) file << trainCost << ", ";
+		}
 
 		if (validation_dataset == nullptr) {
 			std::cout << '\n';
+			if (saveData) file << '\n';
 			continue;
 		}
 
@@ -86,19 +110,28 @@ void NeuralNetwork::SGD(Dataset* dataset, int epochs, double learningRate, int m
 		int validationSize = validation_dataset->size();
 		for (int i = 0; i < validationSize; i++) {
 			output = Evaluate((*validation_dataset)[i].input);
-			if (monitorValues & MONITOR_VALIDATION_COST)
+			if (settings.monitorValues & MONITOR_VALIDATION_COST)
 				validationCost += Cost(output, (*validation_dataset)[i].expectedOutput);
 
 			int prediction = output.MaxIndex();
-			if (monitorValues & MONITOR_VALIDATION_ACCURACY && (*validation_dataset)[i].expectedOutput(prediction) == 1)
+			if (settings.monitorValues & MONITOR_VALIDATION_ACCURACY && (*validation_dataset)[i].expectedOutput(prediction) == 1)
 				correctPredictions++;
 		}
 		validationCost /= validationSize;
-		if (monitorValues & MONITOR_VALIDATION_ACCURACY)
+		if (settings.monitorValues & MONITOR_VALIDATION_ACCURACY) {
 			std::cout << " - Validation Accuracy: " << correctPredictions << " / " << validationSize << " (" << (correctPredictions * 100.0f / validationSize) << "%)";
-		if (monitorValues & MONITOR_VALIDATION_COST)
+			if (saveData) file << (correctPredictions * 100.0f / validationSize) << ", ";
+		}
+		if (settings.monitorValues & MONITOR_VALIDATION_COST) {
 			std::cout << " - Validation Cost : " << validationCost;
+			if (saveData) file << validationCost << ", ";
+		}
 		std::cout << '\n';
+		if (saveData) file << '\n';
+	}
+	if (saveData) {
+		file.close();
+		std::cout << "Performance Report Successfully Saved at: " << settings.performanceReportFilePath << '\n';
 	}
 	std::cout << "Training Completed in " << totalTimeTaken << "s\n";
 }

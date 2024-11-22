@@ -21,6 +21,7 @@ private:
 	void Test(bool random);
 	void Load(std::string path);
 	void Save(std::string format, std::string path);
+	void TogglePerformanceReport(bool enable, std::string path);
 	void Quit();
 	void Reset();
 	void Help();

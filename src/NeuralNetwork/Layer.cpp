@@ -54,7 +54,10 @@ void Layer::ClearGradients() {
 }
 
 Vector Layer::CalculateOutputLayerErrors(Vector actualOutput, Vector expectedOutput, Cost::CostFunction* costFunction) {
-	if (activationFunction->GetFunctionType() == AF::SoftmaxAF) {
+	AF::FunctionType activationFunctionType = activationFunction->GetFunctionType();
+	Cost::CostType costType = costFunction->GetCostType();
+	// Optimization
+	if (activationFunctionType == AF::SoftmaxAF && (costType == Cost::CategoricalCrossEntropyCost || costType == Cost::BinaryCrossEntropyCost)) {
 		return actualOutput - expectedOutput;
 	}
 

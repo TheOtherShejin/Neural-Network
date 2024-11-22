@@ -11,7 +11,8 @@ void DigitClassifierApp::Init() {
 	std::cout << "Loading Test Dataset...\n";
 	test_dataset = LoadIntoDataset("datasets/mnist_test_normalized.csv");
 
-	nn.monitorValues = NeuralNetwork::MONITOR_TRAIN_ACCURACY | NeuralNetwork::MONITOR_VALIDATION_ACCURACY;
+	nn.settings.monitorValues = NeuralNetwork::MONITOR_TRAIN_ACCURACY | NeuralNetwork::MONITOR_VALIDATION_ACCURACY | NeuralNetwork::MONITOR_SAVE_PERFORMANCE_DATA | NeuralNetwork::MONITOR_TRAIN_COST | NeuralNetwork::MONITOR_VALIDATION_COST;
+	nn.settings.performanceReportFilePath = "reports/performance.csv";
 }
 
 void DigitClassifierApp::Update() {
@@ -28,6 +29,7 @@ void DigitClassifierApp::Update() {
 		else if (commandTokens[0] == "test") Test(commandTokens[1] == "random" ? true : false);
 		else if (commandTokens[0] == "load") Load(commandTokens[1]);
 		else if (commandTokens[0] == "save") Save(commandTokens[1], commandTokens[2]);
+		else if (commandTokens[0] == "performanceReport") TogglePerformanceReport(std::stoi(commandTokens[1]), commandTokens[2]);
 		else if (commandTokens[0] == "quit") Quit();
 		else if (commandTokens[0] == "reset") Reset();
 		else if (commandTokens[0] == "help") Help();
@@ -72,6 +74,11 @@ void DigitClassifierApp::Save(std::string format, std::string path) {
 	if (format == "csv") SaveModelToCSV(path, &nn);
 	else if (format == "js") SaveModelToJS(path, &nn);
 }
+void DigitClassifierApp::TogglePerformanceReport(bool enable, std::string path) {
+	if (enable) nn.settings.monitorValues |= NeuralNetwork::MONITOR_SAVE_PERFORMANCE_DATA;
+	else nn.settings.monitorValues &= !NeuralNetwork::MONITOR_SAVE_PERFORMANCE_DATA;
+	nn.settings.performanceReportFilePath = path;
+}
 void DigitClassifierApp::Quit() {
 	runProgram = false;
 }
@@ -90,6 +97,7 @@ void DigitClassifierApp::Help() {
 		"load [loadLocation]\n"
 		"reset - Randomize the neural network's parameters.\n"
 		"help - Show these instructions.\n"
+		"performanceReport [enable: 1 (true) / 0 (false)] [reportSavePath]\n"
 		"quit\n\n"
 	;
 }

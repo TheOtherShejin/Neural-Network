@@ -8,6 +8,10 @@
 #include <NeuralNetwork/Maths/Matrix.h>
 #include <NeuralNetwork/Maths/Random.h>
 
+#include <sstream>
+#include <string>
+#include <fstream>
+
 struct DataPoint {
 	Vector input, expectedOutput;
 	DataPoint(Vector input, Vector expectedOutput)
@@ -25,14 +29,20 @@ private:
 public:
 	std::vector<Layer> layers;
 	Cost::CostFunction* costFunction;
-	
+
 	enum MonitorType {
 		MONITOR_VALIDATION_ACCURACY = 1,
 		MONITOR_VALIDATION_COST = 2,
 		MONITOR_TRAIN_ACCURACY = 4,
-		MONITOR_TRAIN_COST = 8
+		MONITOR_TRAIN_COST = 8,
+		MONITOR_SAVE_PERFORMANCE_DATA = 16
 	};
-	int monitorValues = MONITOR_VALIDATION_ACCURACY | MONITOR_TRAIN_ACCURACY;
+
+	struct Settings {
+		int monitorValues = MONITOR_VALIDATION_ACCURACY | MONITOR_TRAIN_ACCURACY;
+		std::string performanceReportFilePath = "";
+	};
+	Settings settings;
 
 	NeuralNetwork(std::vector<int> numberOfNeurons, AF::FunctionType hiddenLayerAF = AF::SigmoidAF, AF::FunctionType outputLayerAF = AF::SigmoidAF, Cost::CostType costType = Cost::MeanSquaredErrorCost);
 	void RandomizeAllParameters();

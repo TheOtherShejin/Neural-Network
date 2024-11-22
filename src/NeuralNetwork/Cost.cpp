@@ -7,16 +7,12 @@ namespace Cost {
 	Vector MeanSquaredError::EvaluateDerivative(Vector actualOutput, Vector expectedOutput) {
 		return actualOutput - expectedOutput;
 	}
-	double MeanSquaredError::GetCostType() const {
+	CostType MeanSquaredError::GetCostType() const {
 		return Cost::MeanSquaredErrorCost;
 	}
 
 	double BinaryCrossEntropy::Evaluate(Vector actualOutput, Vector expectedOutput) {
-		double cost = 0;
-		for (int i = 0; i < actualOutput.size; i++) {
-			cost += -expectedOutput(i) * log(actualOutput(i)) - (1 - expectedOutput(i)) * log(1 - actualOutput(i));
-		}
-		return cost;
+		return -expectedOutput(1) * log(actualOutput(1)) - (1 - expectedOutput(1)) * log(1 - actualOutput(1));
 	}
 	Vector BinaryCrossEntropy::EvaluateDerivative(Vector actualOutput, Vector expectedOutput) {
 		Vector output(actualOutput.size);
@@ -25,7 +21,7 @@ namespace Cost {
 		}
 		return output;
 	}
-	double BinaryCrossEntropy::GetCostType() const {
+	CostType BinaryCrossEntropy::GetCostType() const {
 		return Cost::BinaryCrossEntropyCost;
 	}
 	
@@ -43,7 +39,7 @@ namespace Cost {
 		}
 		return output;
 	}
-	double CategoricalCrossEntropy::GetCostType() const {
+	CostType CategoricalCrossEntropy::GetCostType() const {
 		return Cost::CategoricalCrossEntropyCost;
 	}
 
