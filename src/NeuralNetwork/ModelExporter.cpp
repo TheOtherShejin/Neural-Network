@@ -12,9 +12,9 @@ void SaveModelToCSV(std::string path, NeuralNetwork* nn) {
 	file << '\n';
 
 	// Write Activation Functions and Cost Function
-	file << AF::GetFunctionEnum(nn->layers[0].ActivationFunction) << ',';
-	file << AF::GetFunctionEnum(nn->layers[nn->layers.size() - 1].ActivationFunction) << ',';
-	file << Cost::GetFunctionEnum(nn->CostFunction) << '\n';
+	file << nn->layers[0].activationFunction->GetFunctionType() << ',';
+	file << nn->layers[nn->layers.size() - 1].activationFunction->GetFunctionType() << ',';
+	file << nn->costFunction->GetCostType() << '\n';
 
 	// Write Weights of Each Layer
 	for (auto& layer : nn->layers) {
@@ -43,8 +43,8 @@ NeuralNetwork LoadModelFromCSV(std::string path) {
 	file.open(path);
 
 	std::vector<int> numberOfNeurons;
-	Vector (*hiddenLayerAF)(Vector) = AF::Linear, (*outputLayerAF)(Vector) = AF::Linear;
-	double (*costFunction)(Vector, Vector) = Cost::MeanSquaredError;
+	AF::FunctionType hiddenLayerAF, outputLayerAF;
+	Cost::CostType costType;
 
 	// Load Number Of Layers
 	if (file.good()) {
@@ -59,14 +59,14 @@ NeuralNetwork LoadModelFromCSV(std::string path) {
 		std::getline(file, line);
 		ss = std::stringstream(line);
 		std::getline(ss, substring, ',');
-		hiddenLayerAF = AF::GetFunctionFromEnum(AF::FunctionType(std::stoi(substring)));
+		hiddenLayerAF = AF::FunctionType(std::stoi(substring));
 		std::getline(ss, substring, ',');
-		outputLayerAF = AF::GetFunctionFromEnum(AF::FunctionType(std::stoi(substring)));
+		outputLayerAF = AF::FunctionType(std::stoi(substring));
 		std::getline(ss, substring, ',');
-		costFunction = Cost::GetFunctionFromEnum(Cost::CostType(std::stoi(substring)));
+		costType = Cost::CostType(std::stoi(substring));
 	}
 
-	NeuralNetwork nn(numberOfNeurons, hiddenLayerAF, outputLayerAF, costFunction);
+	NeuralNetwork nn(numberOfNeurons, hiddenLayerAF, outputLayerAF, costType);
 
 	// Load Weights Of Each Layer
 	for (int i = 0; i < numberOfNeurons.size() - 1; i++) {
@@ -122,11 +122,11 @@ void SaveModelToJS(std::string path, NeuralNetwork* nn) {
 
 	// Write Activation Functions
 	file << "	'activationFunctions': [";
-	file << AF::GetFunctionEnum(nn->layers[0].ActivationFunction) << ',';
-	file << AF::GetFunctionEnum(nn->layers[nn->layers.size() - 1].ActivationFunction) << "],\n";
+	file << nn->layers[0].activationFunction->GetFunctionType() << ',';
+	file << nn->layers[nn->layers.size() - 1].activationFunction->GetFunctionType() << "],\n";
 
 	// Write Cost Function
-	file << "	'cost': " << Cost::GetFunctionEnum(nn->CostFunction) << ",\n";
+	file << "	'cost': " << nn->costFunction->GetCostType() << ",\n";
 
 	// Write Weights of Each Layer
 	file << "	'weights': [";

@@ -1,26 +1,68 @@
 #include <NeuralNetwork/ActivationFunction.h>
 
 namespace ActivationFunctions {
-	Vector Linear(Vector input) {
+	Vector Linear::Activate(Vector input) {
 		return input;
 	}
-	Vector BinaryStep(Vector input) {
+	Vector Linear::ActivateDerivative(Vector input) {
+		return Vector(input.size, 1);
+	}
+	FunctionType Linear::GetFunctionType() const {
+		return AF::LinearAF;
+	}
+
+	Vector BinaryStep::Activate(Vector input) {
 		return input.ForEach([](double element) -> double { return element >= 0; });
 	}
-	Vector ReLU(Vector input) {
+	Vector BinaryStep::ActivateDerivative(Vector input) {
+		return Vector(input.size);
+	}
+	FunctionType BinaryStep::GetFunctionType() const {
+		return AF::BinaryStepAF;
+	}
+
+	Vector ReLU::Activate(Vector input) {
 		return input.ForEach([](double element) -> double { return fmax(0, element); });
 	}
-	Vector LeakyReLU(Vector input) {
+	Vector ReLU::ActivateDerivative(Vector input) {
+		return input.ForEach([](double element) -> double { return element >= 0; });
+	}
+	FunctionType ReLU::GetFunctionType() const {
+		return AF::ReLUAF;
+	}
+
+	Vector LeakyReLU::Activate(Vector input) {
 		return input.ForEach([](double element) -> double { return fmax(0.1f * element, element); });
 	}
-	Vector Sigmoid(Vector input) {
+	Vector LeakyReLU::ActivateDerivative(Vector input) {
+		return input.ForEach([](double element) -> double { return (element >= 0) ? 1 : 0.1f; });
+	}
+	FunctionType LeakyReLU::GetFunctionType() const {
+		return AF::LeakyReLUAF;
+	}
+	
+	Vector Sigmoid::Activate(Vector input) {
 		return input.ForEach([](double element) -> double { return 1.0f / (1.0f + exp(-element)); });
 	}
-	Vector TanH(Vector input) {
+	Vector Sigmoid::ActivateDerivative(Vector input) {
+		Vector value = Activate(input);
+		return value.ForEach([](double element) -> double { return element * (1 - element); });
+	}
+	FunctionType Sigmoid::GetFunctionType() const {
+		return AF::SigmoidAF;
+	}
+	
+	Vector TanH::Activate(Vector input) {
 		return input.ForEach([](double element) -> double { return tanh(element); });
 	}
-	// WIP
-	Vector Softmax(Vector input) {
+	Vector TanH::ActivateDerivative(Vector input) {
+		return input.ForEach([](double element) -> double { return 1.0f / pow(cosh(element), 2); });
+	}
+	FunctionType TanH::GetFunctionType() const {
+		return AF::TanHAF;
+	}
+	
+	Vector Softmax::Activate(Vector input) {
 		Vector output(input.size);
 		double sum = 0;
 		for (int i = 0; i < input.size; i++) {
@@ -29,124 +71,12 @@ namespace ActivationFunctions {
 		}
 		return output / sum;
 	}
-
-	FunctionType GetFunctionEnum(Vector (*activationFunction)(Vector)) {
-		if (activationFunction == Sigmoid)
-			return FunctionType::SigmoidAF;
-		else if (activationFunction == Softmax)
-			return FunctionType::SoftmaxAF;
-		else if (activationFunction == TanH)
-			return FunctionType::TanHAF;
-		else if (activationFunction == ReLU)
-			return FunctionType::ReLUAF;
-		else if (activationFunction == Linear)
-			return FunctionType::LinearAF;
-		else if (activationFunction == BinaryStep)
-			return FunctionType::BinaryStepAF;
-		else if (activationFunction == LeakyReLU)
-			return FunctionType::LeakyReLUAF;
-	}
-	fptr GetFunctionFromEnum(FunctionType funcType) {
-		switch (funcType) {
-		case FunctionType::SigmoidAF:
-			return Sigmoid;
-			break;
-		case FunctionType::SoftmaxAF:
-			return Softmax;
-			break;
-		case FunctionType::TanHAF:
-			return TanH;
-			break;
-		case FunctionType::ReLUAF:
-			return ReLU;
-			break;
-		case FunctionType::LinearAF:
-			return Linear;
-			break;
-		case FunctionType::BinaryStepAF:
-			return BinaryStep;
-			break;
-		case FunctionType::LeakyReLUAF:
-			return LeakyReLU;
-			break;
-		}
-	}
-	fptr GetDerivativeFromEnum(FunctionType funcType) {
-		switch (funcType) {
-		case FunctionType::SigmoidAF:
-			return SigmoidDerivative;
-			break;
-		case FunctionType::SoftmaxAF:
-			return SoftmaxDerivative;
-			break;
-		case FunctionType::TanHAF:
-			return TanHDerivative;
-			break;
-		case FunctionType::ReLUAF:
-			return ReLUDerivative;
-			break;
-		case FunctionType::LinearAF:
-			return LinearDerivative;
-			break;
-		case FunctionType::BinaryStepAF:
-			return BinaryStepDerivative;
-			break;
-		case FunctionType::LeakyReLUAF:
-			return LeakyReLUDerivative;
-			break;
-		}
-	}
-
-	Vector DerivativeOf(Vector input, Vector (*activationFunction)(Vector)) {
-		switch (GetFunctionEnum(activationFunction)) {
-		case FunctionType::SigmoidAF:
-			return SigmoidDerivative(input);
-			break;
-		case FunctionType::SoftmaxAF:
-			return SoftmaxDerivative(input);
-			break;
-		case FunctionType::TanHAF:
-			return TanHDerivative(input);
-			break;
-		case FunctionType::ReLUAF:
-			return ReLUDerivative(input);
-			break;
-		case FunctionType::LinearAF:
-			return LinearDerivative(input);
-			break;
-		case FunctionType::BinaryStepAF:
-			return BinaryStepDerivative(input);
-			break;
-		case FunctionType::LeakyReLUAF:
-			return LeakyReLUDerivative(input);
-			break;
-		}
-	}
-	Vector LinearDerivative(Vector input) {
-		return Vector(input.size, 1);
-	}
-	Vector BinaryStepDerivative(Vector input) {
-		return Vector(input.size);
-	}
-	Vector ReLUDerivative(Vector input) {
-		return input.ForEach([](double element) -> double { return element >= 0; });
-	}
-	Vector LeakyReLUDerivative(Vector input) {
-		return input.ForEach([](double element) -> double { return (element >= 0) ? 1 : 0.1f; });
-	}
-	Vector SigmoidDerivative(Vector input) {
-		Vector value = Sigmoid(input);
-		return value.ForEach([](double element) -> double { return element * (1 - element); });
-	}
-	Vector TanHDerivative(Vector input) {
-		return input.ForEach([](double element) -> double { return 1.0f / pow(cosh(element), 2); });
-	}
-	Vector SoftmaxDerivative(Vector input) {
+	Vector Softmax::ActivateDerivative(Vector input) {
 		/*Vector output = Softmax(input);
 		output.ForEach([](double element) -> double { return element * (1 - element); });
 		return output;*/
 
-		Vector softmaxInputs = Softmax(input);
+		Vector softmaxInputs = Activate(input);
 		Vector output(input.size);
 		for (int i = 0; i < input.size; i++) {
 			for (int j = 0; j < input.size; j++) {
@@ -154,5 +84,34 @@ namespace ActivationFunctions {
 			}
 		}
 		return output;
+	}
+	FunctionType Softmax::GetFunctionType() const {
+		return AF::SoftmaxAF;
+	}
+
+	ActivationFunction* GetFunctionFromEnum(FunctionType funcType) {
+		switch (funcType) {
+		case FunctionType::SigmoidAF:
+			return new Sigmoid();
+			break;
+		case FunctionType::SoftmaxAF:
+			return new Softmax();
+			break;
+		case FunctionType::TanHAF:
+			return new TanH();
+			break;
+		case FunctionType::ReLUAF:
+			return new ReLU();
+			break;
+		case FunctionType::LinearAF:
+			return new Linear();
+			break;
+		case FunctionType::BinaryStepAF:
+			return new BinaryStep();
+			break;
+		case FunctionType::LeakyReLUAF:
+			return new LeakyReLU();
+			break;
+		}
 	}
 }

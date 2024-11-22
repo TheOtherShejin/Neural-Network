@@ -1,9 +1,8 @@
 #include <NeuralNetwork/NeuralNetwork.h>
 
-NeuralNetwork::NeuralNetwork(std::vector<int> numberOfNeurons, Vector (*hiddenLayerAF)(Vector), Vector (*outputLayerAF)(Vector), double (*CostFunction)(Vector, Vector)) {
+NeuralNetwork::NeuralNetwork(std::vector<int> numberOfNeurons, AF::FunctionType hiddenLayerAF, AF::FunctionType outputLayerAF, Cost::CostType costType) {
 	inputSize = numberOfNeurons[0];
-	this->CostFunction = CostFunction;
-	CostFuncDerivative = Cost::GetDerivativeFromEnum(Cost::GetFunctionEnum(CostFunction));
+	costFunction = Cost::GetFunctionFromEnum(costType);
 	for (int i = 1; i < numberOfNeurons.size(); i++) {
 		layers.push_back(Layer(numberOfNeurons[i], numberOfNeurons[i-1], hiddenLayerAF));
 	}
@@ -31,7 +30,7 @@ void NeuralNetwork::BackPropagate(DataPoint* dataPoint, Vector* actualOutput) {
 	Layer& outputLayer = layers[layers.size() - 1];
 
 	// Error
-	Vector errors = outputLayer.CalculateOutputLayerErrors(*actualOutput, dataPoint->expectedOutput, CostFuncDerivative);
+	Vector errors = outputLayer.CalculateOutputLayerErrors(*actualOutput, dataPoint->expectedOutput, costFunction);
 	outputLayer.UpdateGradients(errors);
 
 	for (int i = layers.size() - 2; i >= 0; i--) {
@@ -136,7 +135,7 @@ int NeuralNetwork::GetInputSize() const {
 	return inputSize;
 }
 
-void NeuralNetwork::SetActivationFunctions(Vector (*hiddenLayerAF)(Vector), Vector (*outputLayerAF)(Vector)) {
+void NeuralNetwork::SetActivationFunctions(AF::FunctionType hiddenLayerAF, AF::FunctionType outputLayerAF) {
 	for (auto& layer : layers) {
 		layer.SetActivationFunction(hiddenLayerAF);
 	}

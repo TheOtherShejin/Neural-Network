@@ -7,14 +7,12 @@
 #include <NeuralNetwork/Maths/Vector.h>
 #include <NeuralNetwork/Maths/Matrix.h>
 #include <NeuralNetwork/Maths/Random.h>
-#include <NeuralNetwork/Miscellaneous/Logger.h>
 
 struct DataPoint {
 	Vector input, expectedOutput;
 	DataPoint(Vector input, Vector expectedOutput)
 		: input(input), expectedOutput(expectedOutput) {}
 };
-
 typedef std::vector<DataPoint> Dataset;
 
 class NeuralNetwork {
@@ -24,11 +22,9 @@ private:
 
 	void BackPropagate(DataPoint* dataPoint, Vector* actualOutput);
 	int inputSize;
-
-	Vector (*CostFuncDerivative)(Vector, Vector) = nullptr;
 public:
 	std::vector<Layer> layers;
-	double (*CostFunction)(Vector, Vector) = nullptr;
+	Cost::CostFunction* costFunction;
 	
 	enum MonitorType {
 		MONITOR_VALIDATION_ACCURACY = 1,
@@ -38,7 +34,7 @@ public:
 	};
 	int monitorValues = MONITOR_VALIDATION_ACCURACY | MONITOR_TRAIN_ACCURACY;
 
-	NeuralNetwork(std::vector<int> numberOfNeurons, Vector (*hiddenLayerAF)(Vector) = AF::Sigmoid, Vector (*outputLayerAF)(Vector) = AF::Sigmoid, double (*CostFunction)(Vector, Vector) = Cost::MeanSquaredError);
+	NeuralNetwork(std::vector<int> numberOfNeurons, AF::FunctionType hiddenLayerAF = AF::SigmoidAF, AF::FunctionType outputLayerAF = AF::SigmoidAF, Cost::CostType costType = Cost::MeanSquaredErrorCost);
 	void RandomizeAllParameters();
 
 	Vector Evaluate(Vector input);
@@ -47,5 +43,5 @@ public:
 	double Cost(Vector actualOutput, Vector expectedOutput);
 
 	int GetInputSize() const;
-	void SetActivationFunctions(Vector (*hiddenLayerAF)(Vector), Vector (*outputLayerAF)(Vector));
+	void SetActivationFunctions(AF::FunctionType hiddenLayerAF, AF::FunctionType outputLayerAF);
 };

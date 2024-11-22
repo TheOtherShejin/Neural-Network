@@ -146,7 +146,6 @@
     <ClCompile Include="src\NeuralNetwork\Layer.cpp" />
     <ClCompile Include="src\NeuralNetwork\Maths\Matrix.cpp" />
     <ClCompile Include="src\NeuralNetwork\Maths\Random.cpp" />
-    <ClCompile Include="src\NeuralNetwork\Miscellaneous\Logger.cpp" />
     <ClCompile Include="src\NeuralNetwork\ModelExporter.cpp" />
     <ClCompile Include="src\NeuralNetwork\NeuralNetwork.cpp" />
     <ClCompile Include="src\NeuralNetwork\Maths\Vector.cpp" />
@@ -161,7 +160,6 @@
     <ClInclude Include="include\NeuralNetwork\Layer.h" />
     <ClInclude Include="include\NeuralNetwork\Maths\Matrix.h" />
     <ClInclude Include="include\NeuralNetwork\Maths\Random.h" />
-    <ClInclude Include="include\NeuralNetwork\Miscellaneous\Logger.h" />
     <ClInclude Include="include\NeuralNetwork\ModelExporter.h" />
     <ClInclude Include="include\NeuralNetwork\NeuralNetwork.h" />
     <ClInclude Include="include\NeuralNetwork\Maths\Vector.h" />

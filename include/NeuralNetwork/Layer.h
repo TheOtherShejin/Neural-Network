@@ -11,8 +11,7 @@
 
 class Layer {
 public:
-	Vector (*ActivationFunction)(Vector) = nullptr;
-	Vector (*ActivationDerivative)(Vector) = nullptr;
+	AF::ActivationFunction* activationFunction;
 
 	Vector weightedInputs;
 	Vector rawInputs;
@@ -24,16 +23,15 @@ public:
 	Vector biases;
 	Vector biasCostGradients;
 
-	Layer(int numOfNodes, int numOfIncomingNodes, Vector (*ActivationFunction)(Vector));
+	Layer(int numOfNodes, int numOfIncomingNodes, AF::FunctionType activationFunctionType);
 	void RandomizeParameters();
 	Vector FeedForward(Vector input);
-	void SetActivationFunction(Vector (*ActivationFunction)(Vector));
+	void SetActivationFunction(AF::FunctionType activationFunctionType);
 
 	void ApplyGradients(double learningRate, int miniBatchSize);
 	void UpdateGradients(Vector nodeValues);
 	void ClearGradients();
 
-	Vector CostDerivative(Vector actualOutput, Vector expectedOutput, Vector (*CostDerivativeFunc)(Vector, Vector));
-	Vector CalculateOutputLayerErrors(Vector actualOutput, Vector expectedOutput, Vector(*CostDerivativeFunc)(Vector, Vector));
+	Vector CalculateOutputLayerErrors(Vector actualOutput, Vector expectedOutput, Cost::CostFunction* costFunction);
 	Vector CalculateHiddenLayerErrors(Layer& nextLayer, Vector nextLayerErrors);
 };

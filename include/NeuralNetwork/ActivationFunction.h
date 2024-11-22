@@ -5,7 +5,6 @@
 #include <NeuralNetwork/Maths/Vector.h>
 
 namespace ActivationFunctions {
-	typedef Vector(*fptr)(Vector);
 
 	enum FunctionType {
 		LinearAF,
@@ -17,25 +16,56 @@ namespace ActivationFunctions {
 		TanHAF
 	};
 
-	Vector Linear(Vector input);
-	Vector BinaryStep(Vector input);
-	Vector ReLU(Vector input);
-	Vector LeakyReLU(Vector input);
-	Vector Sigmoid(Vector input);
-	Vector TanH(Vector input);
-	Vector Softmax(Vector input);
+	class ActivationFunction {
+	public:
+		virtual Vector Activate(Vector input) = 0;
+		virtual Vector ActivateDerivative(Vector input) = 0;
+		virtual FunctionType GetFunctionType() const = 0;
+	};
 
-	FunctionType GetFunctionEnum(Vector (*activationFunction)(Vector));
-	fptr GetFunctionFromEnum(FunctionType funcType);
-	fptr GetDerivativeFromEnum(FunctionType funcType);
+	class Linear : public ActivationFunction {
+	public:
+		Vector Activate(Vector input) override;
+		Vector ActivateDerivative(Vector input) override;
+		FunctionType GetFunctionType() const override;
+	};
+	class BinaryStep : public ActivationFunction {
+	public:
+		Vector Activate(Vector input) override;
+		Vector ActivateDerivative(Vector input) override;
+		FunctionType GetFunctionType() const override;
+	};
+	class ReLU : public ActivationFunction {
+	public:
+		Vector Activate(Vector input) override;
+		Vector ActivateDerivative(Vector input) override;
+		FunctionType GetFunctionType() const override;
+	};
+	class LeakyReLU : public ActivationFunction {
+	public:
+		Vector Activate(Vector input) override;
+		Vector ActivateDerivative(Vector input) override;
+		FunctionType GetFunctionType() const override;
+	};
+	class Sigmoid : public ActivationFunction {
+	public:
+		Vector Activate(Vector input) override;
+		Vector ActivateDerivative(Vector input) override;
+		FunctionType GetFunctionType() const override;
+	};
+	class TanH : public ActivationFunction {
+	public:
+		Vector Activate(Vector input) override;
+		Vector ActivateDerivative(Vector input) override;
+		FunctionType GetFunctionType() const override;
+	};
+	class Softmax : public ActivationFunction {
+	public:
+		Vector Activate(Vector input) override;
+		Vector ActivateDerivative(Vector input) override;
+		FunctionType GetFunctionType() const override;
+	};
 
-	Vector DerivativeOf(Vector input, Vector (*activationFunction)(Vector));
-	Vector LinearDerivative(Vector input);
-	Vector BinaryStepDerivative(Vector input);
-	Vector ReLUDerivative(Vector input);
-	Vector LeakyReLUDerivative(Vector input);
-	Vector SigmoidDerivative(Vector input);
-	Vector TanHDerivative(Vector input);
-	Vector SoftmaxDerivative(Vector input);
+	ActivationFunction* GetFunctionFromEnum(FunctionType funcType);
 }
 namespace AF = ActivationFunctions;

@@ -15,7 +15,7 @@ quit
 */
 
 void XOR_Problem() {
-	NeuralNetwork nn({2, 3, 1}, ActivationFunctions::Sigmoid, ActivationFunctions::Sigmoid);
+	NeuralNetwork nn({ 2, 3, 1 });
 	bool runProgram = true;
 	std::cout << "Enter help to get help.\n";
 	while (runProgram) {

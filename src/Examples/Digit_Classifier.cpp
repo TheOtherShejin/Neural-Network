@@ -44,11 +44,11 @@ void DigitClassifierApp::Test(bool random) {
 		Vector output(10);
 		double cost = 0.0f;
 		int correctPredictions = 0;
-		for (int i = 0; i < test_dataset.size(); i++) {
-			output = nn.Evaluate(test_dataset[i].input);
-			cost += nn.Cost(output, test_dataset[i].expectedOutput);
+		for (auto& datapoint : test_dataset) {
+			output = nn.Evaluate(datapoint.input);
+			cost += nn.Cost(output, datapoint.expectedOutput);
 			int prediction = output.MaxIndex();
-			if (test_dataset[i].expectedOutput(prediction) == 1) correctPredictions++;
+			if (datapoint.expectedOutput(prediction) == 1) correctPredictions++;
 		}
 		cost /= test_dataset.size();
 		std::cout << "Test Completed - Accuracy: " << correctPredictions << " / " << test_dataset.size() << " (" << (correctPredictions / 100.0f)

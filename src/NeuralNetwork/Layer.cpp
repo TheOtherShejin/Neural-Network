@@ -1,10 +1,8 @@
 #include <NeuralNetwork/Layer.h>
 
-Layer::Layer(int numOfNodes, int numOfIncomingNodes, Vector (*ActivationFunction)(Vector))
-	: numOfNodes(numOfNodes), numOfIncomingNodes(numOfIncomingNodes), ActivationFunction(ActivationFunction) {
-
-	ActivationDerivative = AF::GetDerivativeFromEnum(AF::GetFunctionEnum(ActivationFunction));
-
+Layer::Layer(int numOfNodes, int numOfIncomingNodes, AF::FunctionType activationFunctionType)
+	: numOfNodes(numOfNodes), numOfIncomingNodes(numOfIncomingNodes) {
+	activationFunction = AF::GetFunctionFromEnum(activationFunctionType);
 	weights = Matrix(numOfNodes, numOfIncomingNodes);
 	weightCostGradients = weights;
 	biases = Vector(numOfNodes);
@@ -26,25 +24,12 @@ Vector Layer::FeedForward(Vector input) {
 	Vector output = weights * input + biases;
 	weightedInputs = output;
 	rawInputs = input;
-	output = ActivationFunction(output);
+	output = activationFunction->Activate(output);
 	return output;
-
-	/*Vector output(numOfNodes);
-	rawInputs = input;
-	weightedInputs = Vector(numOfNodes);
-	for (int i = 0; i < numOfNodes; i++) {
-		weightedInputs(i) = biases(i);
-		for (int j = 0; j < numOfIncomingNodes; j++) {
-			weightedInputs(i) += input(j) * weights(i, j);
-		}
-		output(i) = Sigmoid(weightedInputs(i));
-	}
-	return output;*/
 }
 
-void Layer::SetActivationFunction(Vector (*ActivationFunction)(Vector)) {
-	this->ActivationFunction = ActivationFunction;
-	this->ActivationDerivative = AF::GetDerivativeFromEnum(AF::GetFunctionEnum(ActivationFunction));
+void Layer::SetActivationFunction(AF::FunctionType activationFunctionType) {
+	this->activationFunction = AF::GetFunctionFromEnum(activationFunctionType);
 }
 
 void Layer::ApplyGradients(double learningRate, int miniBatchSize) {
@@ -68,28 +53,15 @@ void Layer::ClearGradients() {
 	biasCostGradients.SetZero();
 }
 
-Vector Layer::CalculateOutputLayerErrors(Vector actualOutput, Vector expectedOutput, Vector(*CostDerivativeFunc)(Vector, Vector)) {
-	if (AF::GetFunctionEnum(ActivationFunction) == AF::SoftmaxAF) {
+Vector Layer::CalculateOutputLayerErrors(Vector actualOutput, Vector expectedOutput, Cost::CostFunction* costFunction) {
+	if (activationFunction->GetFunctionType() == AF::SoftmaxAF) {
 		return actualOutput - expectedOutput;
 	}
 
-	return CostDerivative(actualOutput, expectedOutput, CostDerivativeFunc) * ActivationDerivative(weightedInputs);
+	return costFunction->EvaluateDerivative(actualOutput, expectedOutput) * activationFunction->ActivateDerivative(weightedInputs);
 }
 
 Vector Layer::CalculateHiddenLayerErrors(Layer& nextLayer, Vector nextLayerErrors) {
 	Vector errors = nextLayer.weights.Transpose() * nextLayerErrors;
-	return errors * ActivationDerivative(weightedInputs);
-	
-	/*Vector errors(numOfNodes);
-	for (int i = 0; i < numOfNodes; i++) {
-		for (int j = 0; j < nextLayer.numOfNodes; j++) {
-			errors(i) += nextLayerErrors(j) * nextLayer.weights(j, i);
-		}
-		errors(i) *= SigmoidDerivative(weightedInputs(i));
-	}
-	return errors;*/
-}
-
-Vector Layer::CostDerivative(Vector actualOutput, Vector expectedOutput, Vector(*CostDerivativeFunc)(Vector, Vector)) {
-	return CostDerivativeFunc(actualOutput, expectedOutput);
+	return errors * activationFunction->ActivateDerivative(weightedInputs);
 }

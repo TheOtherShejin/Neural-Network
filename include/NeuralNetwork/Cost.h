@@ -3,24 +3,37 @@
 #include <NeuralNetwork/Maths/Vector.h>
 
 namespace Cost {
-	typedef double (*cfptr)(Vector, Vector);
-	typedef Vector (*dfptr)(Vector, Vector);
-
 	enum CostType {
 		MeanSquaredErrorCost,
 		BinaryCrossEntropyCost,
 		CategoricalCrossEntropyCost
 	};
+	
+	class CostFunction {
+	public:
+		virtual double Evaluate(Vector actualOutput, Vector expectedOutput) = 0;
+		virtual Vector EvaluateDerivative(Vector actualOutput, Vector expectedOutput) = 0;
+		virtual double GetCostType() const = 0;
+	};
 
-	CostType GetFunctionEnum(double (*costFunc)(Vector, Vector));
-	cfptr GetFunctionFromEnum(CostType funcType);
-	dfptr GetDerivativeFromEnum(CostType funcType);
+	class MeanSquaredError : public CostFunction {
+	public:
+		double Evaluate(Vector actualOutput, Vector expectedOutput) override;
+		Vector EvaluateDerivative(Vector actualOutput, Vector expectedOutput) override;
+		double GetCostType() const override;
+	};
+	class BinaryCrossEntropy: public CostFunction {
+	public:
+		double Evaluate(Vector actualOutput, Vector expectedOutput) override;
+		Vector EvaluateDerivative(Vector actualOutput, Vector expectedOutput) override;
+		double GetCostType() const override;
+	};
+	class CategoricalCrossEntropy : public CostFunction {
+	public:
+		double Evaluate(Vector actualOutput, Vector expectedOutput) override;
+		Vector EvaluateDerivative(Vector actualOutput, Vector expectedOutput) override;
+		double GetCostType() const override;
+	};
 
-	double MeanSquaredError(Vector actualOutput, Vector expectedOutput);
-	double BinaryCrossEntropy(Vector actualOutput, Vector expectedOutput);
-	double CategoricalCrossEntropy(Vector acutalOutput, Vector expectedOutput);
-
-	Vector MeanSquaredErrorDerivative(Vector actualOutput, Vector expectedOutput);
-	Vector BinaryCrossEntropyDerivative(Vector actualOutput, Vector expectedOutput);
-	Vector CategoricalCrossEntropyDerivative(Vector actualOutput, Vector expectedOutput);
+	CostFunction* GetFunctionFromEnum(CostType funcType);
 }

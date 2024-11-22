@@ -12,9 +12,8 @@ public:
 	void Run();
 private:
 	bool runProgram = true;
-	NeuralNetwork nn{ { 784, 30, 10 }, ActivationFunctions::Sigmoid, ActivationFunctions::Softmax, Cost::CategoricalCrossEntropy };
+	NeuralNetwork nn{ { 784, 30, 10 }, ActivationFunctions::SigmoidAF, ActivationFunctions::SoftmaxAF,  Cost::CategoricalCrossEntropyCost };
 	Dataset train_dataset, validation_dataset, test_dataset;
-
 	void Init();
 	void Update();
 
