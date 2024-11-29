@@ -78,6 +78,9 @@
     <ClCompile Include="src\NeuralNetwork\Maths\Random.cpp">
       <Filter>Source Files\Neural Network\Maths</Filter>
     </ClCompile>
+    <ClCompile Include="src\Examples\LearningSlowDown.cpp">
+      <Filter>Source Files\Examples</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\NeuralNetwork\NeuralNetwork.h">
@@ -115,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="include\NeuralNetwork\Maths\Random.h">
       <Filter>Header Files\Neural Network\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Examples\LearningSlowDown.h">
+      <Filter>Header Files\Examples</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

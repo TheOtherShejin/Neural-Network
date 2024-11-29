@@ -43,6 +43,24 @@ namespace Cost {
 		return Cost::CategoricalCrossEntropyCost;
 	}
 
+	double SigmoidCrossEntropy::Evaluate(Vector actualOutput, Vector expectedOutput) {
+		double cost = 0;
+		for (int i = 0; i < actualOutput.size; i++) {
+			cost +=  -expectedOutput(i) * log(actualOutput(i)) - (1 - expectedOutput(i)) * log(1 - actualOutput(i));
+		}
+		return cost;
+	}
+	Vector SigmoidCrossEntropy::EvaluateDerivative(Vector actualOutput, Vector expectedOutput) {
+		Vector output(actualOutput.size);
+		for (int i = 0; i < output.size; i++) {
+			output(i) = (actualOutput(i) - expectedOutput(i)) / (actualOutput(i) * (1 - actualOutput(i)));
+		}
+		return output;
+	}
+	CostType SigmoidCrossEntropy::GetCostType() const {
+		return Cost::SigmoidCrossEntropyCost;
+	}
+
 	CostFunction* GetFunctionFromEnum(CostType funcType) {
 		switch (funcType) {
 		case CostType::MeanSquaredErrorCost:
@@ -53,6 +71,9 @@ namespace Cost {
 			break;
 		case CostType::CategoricalCrossEntropyCost:
 			return new CategoricalCrossEntropy();
+			break;
+		case CostType::SigmoidCrossEntropyCost:
+			return new SigmoidCrossEntropy();
 			break;
 		}
 	}

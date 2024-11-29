@@ -6,7 +6,8 @@ namespace Cost {
 	enum CostType {
 		MeanSquaredErrorCost,
 		BinaryCrossEntropyCost,
-		CategoricalCrossEntropyCost
+		CategoricalCrossEntropyCost,
+		SigmoidCrossEntropyCost
 	};
 	
 	class CostFunction {
@@ -29,6 +30,12 @@ namespace Cost {
 		CostType GetCostType() const override;
 	};
 	class CategoricalCrossEntropy : public CostFunction {
+	public:
+		double Evaluate(Vector actualOutput, Vector expectedOutput) override;
+		Vector EvaluateDerivative(Vector actualOutput, Vector expectedOutput) override;
+		CostType GetCostType() const override;
+	};
+	class SigmoidCrossEntropy : public CostFunction {
 	public:
 		double Evaluate(Vector actualOutput, Vector expectedOutput) override;
 		Vector EvaluateDerivative(Vector actualOutput, Vector expectedOutput) override;

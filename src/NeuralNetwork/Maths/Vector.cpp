@@ -102,7 +102,7 @@ double Vector::MagnitudeSqr() const {
 int Vector::MaxIndex() const {
 	int highestIndex = 0;
 	double highestValue = elements[0];
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < size; i++) {
 		if (elements[i] > highestValue) {
 			highestValue = elements[i];
 			highestIndex = i;

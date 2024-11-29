@@ -137,6 +137,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Examples\Digit_Classifier.cpp" />
+    <ClCompile Include="src\Examples\LearningSlowDown.cpp" />
     <ClCompile Include="src\Examples\MNIST_Processor.cpp" />
     <ClCompile Include="src\Examples\Utils.cpp" />
     <ClCompile Include="src\Examples\XOR_Problem.cpp" />
@@ -152,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Examples\Digit_Classifier.h" />
+    <ClInclude Include="include\Examples\LearningSlowDown.h" />
     <ClInclude Include="include\Examples\MNIST_Processor.h" />
     <ClInclude Include="include\Examples\Utils.h" />
     <ClInclude Include="include\Examples\XOR_Problem.h" />

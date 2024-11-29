@@ -57,7 +57,8 @@ Vector Layer::CalculateOutputLayerErrors(Vector actualOutput, Vector expectedOut
 	AF::FunctionType activationFunctionType = activationFunction->GetFunctionType();
 	Cost::CostType costType = costFunction->GetCostType();
 	// Optimization
-	if (activationFunctionType == AF::SoftmaxAF && (costType == Cost::CategoricalCrossEntropyCost || costType == Cost::BinaryCrossEntropyCost)) {
+	if ((activationFunctionType == AF::SoftmaxAF && (costType == Cost::CategoricalCrossEntropyCost || costType == Cost::BinaryCrossEntropyCost)) ||
+		(activationFunctionType == AF::SigmoidAF && costType == Cost::SigmoidCrossEntropyCost)) {
 		return actualOutput - expectedOutput;
 	}
 
