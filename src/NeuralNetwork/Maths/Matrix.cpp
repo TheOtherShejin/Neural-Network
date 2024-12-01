@@ -66,6 +66,9 @@ void Matrix::operator*=(double other) {
 double& Matrix::operator()(int row, int col) {
 	return elements[row][col];
 }
+double Matrix::Get(int row, int col) const {
+	return elements[row][col];
+}
 
 Matrix Matrix::Transpose() {
 	Matrix mat(cols, rows);

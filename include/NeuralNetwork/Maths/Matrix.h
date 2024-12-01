@@ -27,6 +27,7 @@ public:
 	void operator*=(double other);
 
 	double& operator()(int row, int col);
+	double Get(int row, int col) const;
 
 	Matrix Transpose();
 	void SetZero();

@@ -22,8 +22,21 @@ Vector NeuralNetwork::Evaluate(Vector input) {
 	return input;
 }
 
-double NeuralNetwork::Cost(Vector actualOutput, Vector expectedOutput) {
-	return (actualOutput - expectedOutput).MagnitudeSqr() * 0.5;
+double NeuralNetwork::Cost(Vector actualOutput, Vector expectedOutput, double lambda, int datasetSize) {
+	return costFunction->Evaluate(actualOutput, expectedOutput) + RegularizationAmount(lambda, datasetSize);
+}
+
+double NeuralNetwork::RegularizationAmount(double lambda, int datasetSize) const {
+	// L2 (Weight Decay) Regularization
+	double weightSum = 0;
+	for (auto& layer : layers) {
+		for (int i = 0; i < layer.weights.rows; i++) {
+			for (int j = 0; j < layer.weights.cols; j++) {
+				weightSum += layer.weights.Get(i, j) * layer.weights.Get(i, j);
+			}
+		}
+	}
+	return 0.5 * weightSum * lambda / datasetSize;
 }
 
 void NeuralNetwork::BackPropagate(DataPoint* dataPoint, Vector* actualOutput) {
@@ -39,7 +52,7 @@ void NeuralNetwork::BackPropagate(DataPoint* dataPoint, Vector* actualOutput) {
 	}
 }
 
-void NeuralNetwork::SGD(Dataset* dataset, int epochs, double learningRate, int miniBatchSize, Dataset* validation_dataset) {
+void NeuralNetwork::SGD(Dataset* dataset, int epochs, double learningRate, int miniBatchSize, double lambda, Dataset* validation_dataset) {
 	float totalTimeTaken = 0.0f;
 	Vector output(10);
 	std::ofstream file;
@@ -60,7 +73,7 @@ void NeuralNetwork::SGD(Dataset* dataset, int epochs, double learningRate, int m
 		}
 	}
 
-	std::cout << "Training Started - " << epochs << " Epochs, Learning Rate: " << learningRate << ", Mini-Batch Size: " << miniBatchSize << '\n';
+	std::cout << "Training Started - " << epochs << " Epochs, Learning Rate: " << learningRate << ", Mini-Batch Size: " << miniBatchSize << ", Lambda: " << lambda << '\n';
 	for (int i = 0; i < epochs; i++) {
 		std::cout << "Epoch: " << i;
 		if (saveData) file << i << ", ";
@@ -69,7 +82,7 @@ void NeuralNetwork::SGD(Dataset* dataset, int epochs, double learningRate, int m
 		std::shuffle(dataset->begin(), dataset->end(), std::mt19937{std::random_device{}()});
 
 		auto startTime = std::chrono::high_resolution_clock::now();
-		Learn(*dataset, learningRate, miniBatchSize);
+		Learn(dataset, learningRate, miniBatchSize, lambda);
 		auto endTime = std::chrono::high_resolution_clock::now();
 		auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
 
@@ -136,25 +149,25 @@ void NeuralNetwork::SGD(Dataset* dataset, int epochs, double learningRate, int m
 	std::cout << "Training Completed in " << totalTimeTaken << "s\n";
 }
 
-void NeuralNetwork::Learn(std::vector<DataPoint> dataset, double learningRate, int miniBatchSize) {
-	for (int i = 0; i < (dataset.size() / miniBatchSize); i++) {
+void NeuralNetwork::Learn(Dataset* dataset, double learningRate, int miniBatchSize, double lambda) {
+	for (int i = 0; i < (dataset->size() / miniBatchSize); i++) {
 		for (int j = 0; j < miniBatchSize; j++) {
 			int index = j + i * miniBatchSize;
 			// Feedforward
-			Vector actualOutput = Evaluate(dataset[index].input);
+			Vector actualOutput = Evaluate((*dataset)[index].input);
 
-			BackPropagate(&dataset[index], &actualOutput);
+			BackPropagate(&(*dataset)[index], &actualOutput);
 		}
-
+		
 		// Gradient Descent
-		ApplyAllGradients(learningRate, miniBatchSize);
+		ApplyAllGradients(learningRate, miniBatchSize, lambda, dataset->size());
 		ClearAllGradients();
 	}
 }
 
-void NeuralNetwork::ApplyAllGradients(double learningRate, int miniBatchSize) {
+void NeuralNetwork::ApplyAllGradients(double learningRate, int miniBatchSize, double lambda, int datasetSize) {
 	for (auto& layer : layers) {
-		layer.ApplyGradients(learningRate, miniBatchSize);
+		layer.ApplyGradients(learningRate, miniBatchSize, lambda, datasetSize);
 	}
 }
 

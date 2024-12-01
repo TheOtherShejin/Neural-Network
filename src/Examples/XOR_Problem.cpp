@@ -35,7 +35,7 @@ void XOR_Problem() {
 			int epochs = std::stoi(commandTokens[1]);
 			float learningRate = std::stof(commandTokens[2]);
 
-			std::vector<DataPoint> dataPoints = {
+			Dataset dataPoints = {
 				{ Vector{{0, 0}}, Vector{{0}} },
 				{ Vector{{0, 1}}, Vector{{1}} },
 				{ Vector{{1, 0}}, Vector{{1}} },
@@ -46,7 +46,7 @@ void XOR_Problem() {
 			std::cout << "Training Started - " << epochs << " Epochs, Learning Rate: " << learningRate << '\n';
 			auto startTime = std::chrono::high_resolution_clock::now();
 			for (int i = 0; i < epochs; i++) {
-				nn.Learn(dataPoints, learningRate, 4);
+				nn.Learn(&dataPoints, learningRate, 4);
 
 				if (i % (int)round(epochs / 10.0f) == 0) {
 					Vector output;

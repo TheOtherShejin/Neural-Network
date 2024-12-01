@@ -25,17 +25,11 @@
     <Filter Include="Header Files\Examples">
       <UniqueIdentifier>{4de1ad95-64a0-4ff9-9975-34f2c38285b5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Neural Network\Miscellaneous">
-      <UniqueIdentifier>{89623d90-6164-4982-92a9-88c5e84fea5c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Neural Network\Maths">
       <UniqueIdentifier>{6a647738-0fb4-4ebb-98a7-e6759a539f57}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Neural Network\Maths">
       <UniqueIdentifier>{4940dd22-428d-4d98-88b3-62f6660fee59}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Neural Network\Miscellaneous">
-      <UniqueIdentifier>{9b263b50-1038-446a-99fc-002254fbcf3d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

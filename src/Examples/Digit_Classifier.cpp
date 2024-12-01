@@ -37,7 +37,7 @@ void DigitClassifierApp::Update() {
 }
 
 void DigitClassifierApp::Train(int epochs, double learningRate, int miniBatchSize) {
-	nn.SGD(&train_dataset, epochs, learningRate, miniBatchSize, &validation_dataset);
+	nn.SGD(&train_dataset, epochs, learningRate, miniBatchSize, lambda, &validation_dataset);
 }
 void DigitClassifierApp::Test(bool random) {
 	if (!random) {
@@ -48,7 +48,7 @@ void DigitClassifierApp::Test(bool random) {
 		int correctPredictions = 0;
 		for (auto& datapoint : test_dataset) {
 			output = nn.Evaluate(datapoint.input);
-			cost += nn.Cost(output, datapoint.expectedOutput);
+			cost += nn.Cost(output, datapoint.expectedOutput, lambda, test_dataset.size());
 			int prediction = output.MaxIndex();
 			if (datapoint.expectedOutput(prediction) == 1) correctPredictions++;
 		}

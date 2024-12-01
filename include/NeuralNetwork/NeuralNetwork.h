@@ -21,14 +21,14 @@ typedef std::vector<DataPoint> Dataset;
 
 class NeuralNetwork {
 private:
-	void ApplyAllGradients(double learningRate, int miniBatchSize);
+	void ApplyAllGradients(double learningRate, int miniBatchSize, double lambda, int datasetSize);
 	void ClearAllGradients();
 
 	void BackPropagate(DataPoint* dataPoint, Vector* actualOutput);
 	int inputSize;
 public:
-	std::vector<Layer> layers;
 	Cost::CostFunction* costFunction;
+	std::vector<Layer> layers;
 
 	enum MonitorType {
 		MONITOR_VALIDATION_ACCURACY = 1,
@@ -48,9 +48,10 @@ public:
 	void RandomizeAllParameters();
 
 	Vector Evaluate(Vector input);
-	void Learn(std::vector<DataPoint> dataset, double learningRate, int miniBatchSize);
-	void SGD(Dataset* dataset, int epochs, double learningRate, int miniBatchSize, Dataset* validation_dataset = nullptr);
-	double Cost(Vector actualOutput, Vector expectedOutput);
+	void Learn(Dataset* dataset, double learningRate, int miniBatchSize, double lambda = 0.0);
+	void SGD(Dataset* dataset, int epochs, double learningRate, int miniBatchSize, double lambda = 0.0, Dataset* validation_dataset = nullptr);
+	double Cost(Vector actualOutput, Vector expectedOutput, double lambda = 0.0, int datasetSize = 1);
+	double RegularizationAmount(double lambda, int datasetSize) const;
 
 	int GetInputSize() const;
 	void SetActivationFunctions(AF::FunctionType hiddenLayerAF, AF::FunctionType outputLayerAF);

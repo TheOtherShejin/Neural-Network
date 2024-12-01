@@ -28,7 +28,7 @@ public:
 	Vector FeedForward(Vector input);
 	void SetActivationFunction(AF::FunctionType activationFunctionType);
 
-	void ApplyGradients(double learningRate, int miniBatchSize);
+	void ApplyGradients(double learningRate, int miniBatchSize, double lambda, int datasetSize);
 	void UpdateGradients(Vector nodeValues);
 	void ClearGradients();
 
