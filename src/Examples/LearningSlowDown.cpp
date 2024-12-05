@@ -6,8 +6,8 @@ void LearningSlowDownApp::Run() {
 }
 
 void LearningSlowDownApp::Init() {
-	nn1.settings.monitorValues = NeuralNetwork::MONITOR_TRAIN_COST | NeuralNetwork::MONITOR_SAVE_PERFORMANCE_DATA;
-	nn2.settings.monitorValues = nn1.settings.monitorValues;
+	nn1.settings.monitorFlags = NeuralNetwork::MONITOR_TRAIN_COST | NeuralNetwork::MONITOR_SAVE_PERFORMANCE_DATA;
+	nn2.settings.monitorFlags = nn1.settings.monitorFlags;
 
 	dataset.push_back(DataPoint(Vector(1, 1), Vector(1, 0)));
 }

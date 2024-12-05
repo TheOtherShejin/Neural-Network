@@ -32,9 +32,14 @@ void Layer::SetActivationFunction(AF::FunctionType activationFunctionType) {
 	this->activationFunction = AF::GetFunctionFromEnum(activationFunctionType);
 }
 
-void Layer::ApplyGradients(double learningRate, int miniBatchSize, double lambda, int datasetSize) {
-	double weightDecayFactor = 1 - (learningRate * lambda) / (double)datasetSize;
-	weights = weights * weightDecayFactor - weightCostGradients * (learningRate / (double)miniBatchSize);
+void Layer::ApplyGradients(double learningRate, int miniBatchSize, double lambda, int datasetSize, bool isL2) {
+	if (isL2) {
+		double weightDecayFactor = 1 - (learningRate * lambda) / (double)datasetSize;
+		weights = weights * weightDecayFactor - weightCostGradients * (learningRate / (double)miniBatchSize);
+	}
+	else {
+		weights -= weights.Sign() * (learningRate * lambda / (double)datasetSize) + weightCostGradients * (learningRate / (double)miniBatchSize);
+	}
 	biases -= biasCostGradients * (learningRate / (double)miniBatchSize);
 }
 

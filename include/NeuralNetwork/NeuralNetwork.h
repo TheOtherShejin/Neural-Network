@@ -18,6 +18,7 @@ private:
 	int inputSize;
 	double lambda = 0;
 	int datasetSize = 1;
+	bool isL2 = true;
 
 	double RegularizationAmount(double lambda, int datasetSize) const;
 	void BackPropagate(DataPoint* dataPoint, Vector* actualOutput);
@@ -39,7 +40,7 @@ public:
 	};
 
 	struct Settings {
-		int monitorValues = MONITOR_VALIDATION_ACCURACY | MONITOR_TRAIN_ACCURACY;
+		int monitorFlags = MONITOR_VALIDATION_ACCURACY | MONITOR_TRAIN_ACCURACY;
 		std::string performanceReportFilePath = "";
 	};
 	Settings settings;
@@ -48,8 +49,8 @@ public:
 	void RandomizeAllParameters();
 
 	Vector Evaluate(Vector input);
-	void Learn(Dataset* dataset, double learningRate, int miniBatchSize, double lambda = 0.0);
-	void SGD(Dataset* dataset, int epochs, double learningRate, int miniBatchSize, double lambda = 0.0, Dataset* validation_dataset = nullptr);
+	void Learn(Dataset* dataset, double learningRate, int miniBatchSize, double lambda = 0.0, bool isL2 = true);
+	void SGD(Dataset* dataset, int epochs, double learningRate, int miniBatchSize, double lambda = 0.0, bool isL2 = true, Dataset* validation_dataset = nullptr);
 	double Cost(Vector actualOutput, Vector expectedOutput);
 
 	int GetInputSize() const;

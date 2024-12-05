@@ -74,7 +74,16 @@ Matrix Matrix::Transpose() {
 	Matrix mat(cols, rows);
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
-			mat(j, i) = (*this)(i, j);
+			mat(j, i) = elements[i][j];
+		}
+	}
+	return mat;
+}
+Matrix Matrix::Sign() {
+	Matrix mat(cols, rows);
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			mat(i, j) = std::signbit(elements[i][j]);
 		}
 	}
 	return mat;

@@ -30,6 +30,7 @@ public:
 	double Get(int row, int col) const;
 
 	Matrix Transpose();
+	Matrix Sign();
 	void SetZero();
 	void Print();
 };

@@ -24,28 +24,31 @@ double NeuralNetwork::Cost(Vector actualOutput, Vector expectedOutput) {
 	return costFunction->Evaluate(actualOutput, expectedOutput) + RegularizationAmount(lambda, datasetSize);
 }
 double NeuralNetwork::RegularizationAmount(double lambda, int datasetSize) const {
-	// L2 (Weight Decay) Regularization
 	double weightSum = 0;
 	for (auto& layer : layers) {
 		for (int i = 0; i < layer.weights.rows; i++) {
 			for (int j = 0; j < layer.weights.cols; j++) {
-				weightSum += layer.weights.Get(i, j) * layer.weights.Get(i, j);
+				// L2 (Weight Decay) Regularization
+				if (isL2) weightSum += layer.weights.Get(i, j) * layer.weights.Get(i, j);
+				// L1 Regularization
+				else weightSum += abs(layer.weights.Get(i, j));
 			}
 		}
 	}
-	return 0.5 * weightSum * lambda / datasetSize;
+	if (isL2) weightSum *= 0.5;
+	return weightSum * lambda / datasetSize;
 }
 
-void NeuralNetwork::SGD(Dataset* dataset, int epochs, double learningRate, int miniBatchSize, double lambda, Dataset* validation_dataset) {
+void NeuralNetwork::SGD(Dataset* dataset, int epochs, double learningRate, int miniBatchSize, double lambda, bool isL2, Dataset* validation_dataset) {
 	float totalTimeTaken = 0.0f;
 
 	// Report File Settings
 	std::ofstream file;
-	bool isSaveData = settings.monitorValues & MONITOR_SAVE_PERFORMANCE_DATA;
-	bool isTrainAcc = settings.monitorValues & MONITOR_TRAIN_ACCURACY;
-	bool isTrainCost = settings.monitorValues & MONITOR_TRAIN_COST;
-	bool isValidAcc = settings.monitorValues & MONITOR_VALIDATION_ACCURACY;
-	bool isValidCost = settings.monitorValues & MONITOR_VALIDATION_COST;
+	bool isSaveData = settings.monitorFlags & MONITOR_SAVE_PERFORMANCE_DATA;
+	bool isTrainAcc = settings.monitorFlags & MONITOR_TRAIN_ACCURACY;
+	bool isTrainCost = settings.monitorFlags & MONITOR_TRAIN_COST;
+	bool isValidAcc = settings.monitorFlags & MONITOR_VALIDATION_ACCURACY;
+	bool isValidCost = settings.monitorFlags & MONITOR_VALIDATION_COST;
 	if (isSaveData) {
 		file.exceptions(std::ofstream::failbit | std::ofstream::badbit);
 		try {
@@ -73,7 +76,7 @@ void NeuralNetwork::SGD(Dataset* dataset, int epochs, double learningRate, int m
 
 		// Train
 		auto startTime = std::chrono::high_resolution_clock::now();
-		Learn(dataset, learningRate, miniBatchSize, lambda);
+		Learn(dataset, learningRate, miniBatchSize, lambda, isL2);
 		auto endTime = std::chrono::high_resolution_clock::now();
 		auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
 		std::cout << " - " << (dt.count() * 0.001f) << 's';
@@ -121,9 +124,10 @@ void NeuralNetwork::ProcessDataset(Dataset* dataset, bool isMonitorAcc, bool isM
 		if (isSaveData) file << cost << ", ";
 	}
 }
-void NeuralNetwork::Learn(Dataset* dataset, double learningRate, int miniBatchSize, double lambda) {
+void NeuralNetwork::Learn(Dataset* dataset, double learningRate, int miniBatchSize, double lambda, bool isL2) {
 	this->lambda = lambda;
 	this->datasetSize = dataset->size();
+	this->isL2 = isL2;
 
 	int numOfBatches = datasetSize / miniBatchSize;
 	for (int i = 0; i < numOfBatches; i++) {
@@ -153,7 +157,7 @@ void NeuralNetwork::BackPropagate(DataPoint* dataPoint, Vector* actualOutput) {
 
 void NeuralNetwork::ApplyAllGradients(double learningRate, int miniBatchSize, double lambda, int datasetSize) {
 	for (auto& layer : layers) {
-		layer.ApplyGradients(learningRate, miniBatchSize, lambda, datasetSize);
+		layer.ApplyGradients(learningRate, miniBatchSize, lambda, datasetSize, isL2);
 	}
 }
 void NeuralNetwork::ClearAllGradients() {

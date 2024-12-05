@@ -6,7 +6,7 @@ void DigitClassifierApp::Init() {
 	std::cout << "Loading Test Dataset...\n";
 	test_dataset = LoadIntoDataset("datasets/mnist_test_normalized.csv");
 
-	nn.settings.monitorValues = NeuralNetwork::MONITOR_TRAIN_ACCURACY | NeuralNetwork::MONITOR_VALIDATION_ACCURACY;
+	nn.settings.monitorFlags = NeuralNetwork::MONITOR_TRAIN_ACCURACY | NeuralNetwork::MONITOR_VALIDATION_ACCURACY | NeuralNetwork::MONITOR_SAVE_PERFORMANCE_DATA;
 	nn.settings.performanceReportFilePath = "reports/performance.csv";
 }
 
@@ -34,7 +34,7 @@ void DigitClassifierApp::Update() {
 
 void DigitClassifierApp::Train(int epochs, double learningRate, int miniBatchSize, double lambda) {
 	this->lambda = lambda;
-	nn.SGD(&train_dataset, epochs, learningRate, miniBatchSize, lambda, &validation_dataset);
+	nn.SGD(&train_dataset, epochs, learningRate, miniBatchSize, lambda, true, &validation_dataset);
 }
 void DigitClassifierApp::Test(bool random) {
 	Vector output(10);
@@ -73,10 +73,10 @@ void DigitClassifierApp::Save(std::string format, std::string path) {
 }
 void DigitClassifierApp::TogglePerformanceReport(bool enable, std::string path) {
 	if (enable) {
-		nn.settings.monitorValues |= NeuralNetwork::MONITOR_SAVE_PERFORMANCE_DATA;
+		nn.settings.monitorFlags |= NeuralNetwork::MONITOR_SAVE_PERFORMANCE_DATA;
 		nn.settings.performanceReportFilePath = path;
 	}
-	else nn.settings.monitorValues = nn.settings.monitorValues & 0b01111;
+	else nn.settings.monitorFlags = nn.settings.monitorFlags & 0b01111;
 }
 
 void DigitClassifierApp::Quit() {
