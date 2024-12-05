@@ -136,6 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Examples\Application.cpp" />
     <ClCompile Include="src\Examples\Digit_Classifier.cpp" />
     <ClCompile Include="src\Examples\LearningSlowDown.cpp" />
     <ClCompile Include="src\Examples\MNIST_Processor.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="src\NeuralNetwork\Maths\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Examples\Application.h" />
     <ClInclude Include="include\Examples\Digit_Classifier.h" />
     <ClInclude Include="include\Examples\LearningSlowDown.h" />
     <ClInclude Include="include\Examples\MNIST_Processor.h" />
@@ -159,6 +161,7 @@
     <ClInclude Include="include\Examples\XOR_Problem.h" />
     <ClInclude Include="include\NeuralNetwork\ActivationFunction.h" />
     <ClInclude Include="include\NeuralNetwork\Cost.h" />
+    <ClInclude Include="include\NeuralNetwork\Dataset.h" />
     <ClInclude Include="include\NeuralNetwork\Layer.h" />
     <ClInclude Include="include\NeuralNetwork\Maths\Matrix.h" />
     <ClInclude Include="include\NeuralNetwork\Maths\Random.h" />

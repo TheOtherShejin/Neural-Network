@@ -10,18 +10,19 @@
 #include <iostream>
 
 class Layer {
-public:
-	AF::ActivationFunction* activationFunction;
-
+private:
 	Vector weightedInputs;
 	Vector rawInputs;
-
-	int numOfNodes, numOfIncomingNodes;
-
-	Matrix weights;
 	Matrix weightCostGradients;
-	Vector biases;
 	Vector biasCostGradients;
+
+	Vector CalculateOutputLayerErrors(Vector actualOutput, Vector expectedOutput, Cost::CostFunction* costFunction);
+	Vector CalculateHiddenLayerErrors(Layer& nextLayer, Vector nextLayerErrors);
+public:
+	AF::ActivationFunction* activationFunction;
+	int numOfNodes, numOfIncomingNodes;
+	Matrix weights;
+	Vector biases;
 
 	Layer(int numOfNodes, int numOfIncomingNodes, AF::FunctionType activationFunctionType);
 	void RandomizeParameters();
@@ -32,6 +33,5 @@ public:
 	void UpdateGradients(Vector nodeValues);
 	void ClearGradients();
 
-	Vector CalculateOutputLayerErrors(Vector actualOutput, Vector expectedOutput, Cost::CostFunction* costFunction);
-	Vector CalculateHiddenLayerErrors(Layer& nextLayer, Vector nextLayerErrors);
+	friend class NeuralNetwork;
 };
